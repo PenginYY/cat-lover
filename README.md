@@ -15,6 +15,6 @@ This project is the final assignment for the CSX4104 Web Application Development
 This project showcases the technical skills acquired during the course and provides a fun and interactive platform for cat lovers to express themselves.
 
 ## Team Members
-
+- Pattiya Yiadram
 - Yumi Yoshida
 - Santawan Sanpha-Asa
