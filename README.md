@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is the final assignment for the CSX4104 Web Application Development course. Developed in collaboration with team members Yumi Yoshida and Santawan Sanpha-Asa, this application is designed specifically for cat enthusiasts.
+This project is called **Cat Lover**. This is the final assignment for the CSX4104 Web Application Development course. Developed in collaboration between our team members: Pattiya Yiadram, Yumi Yoshida, and Santawan Sanpha-asa, this application is designed specifically for cat enthusiasts.
 
 ## Features
 
@@ -15,6 +15,6 @@ This project is the final assignment for the CSX4104 Web Application Development
 This project showcases the technical skills acquired during the course and provides a fun and interactive platform for cat lovers to express themselves.
 
 ## Team Members
-
+- Pattiya Yiadram
 - Yumi Yoshida
-- Santawan Sanpha-Asa
+- Santawan Sanpha-asa
