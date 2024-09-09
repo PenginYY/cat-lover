@@ -7,6 +7,8 @@ export default function Favorite() {
     <main>
       <Navbar />
       <h1>Favorite page</h1>
+      <div></div>
+      <div></div>
     </main>
   );
 }
