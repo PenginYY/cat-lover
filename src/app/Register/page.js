@@ -95,7 +95,7 @@ export default function Register() {
         </form>
         <hr className="my-3" />
         <p>
-          Do not have an account? go to{" "}
+          Already have an account? Go to{" "}
           <Link className="text-blue-500 hover:underline" href={"/Login"}>
             Login
           </Link>{" "}

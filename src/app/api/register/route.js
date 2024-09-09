@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
     try {
-        const { name, email, password } = await RegExp.json();
+        const { name, email, password } = await req.json();
 
         console.log("Name: ", name);
         console.log("Email: ", email);
