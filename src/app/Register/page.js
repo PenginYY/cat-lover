@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Navbar from "../Components/Navbar.js";
+import Navbar from "../Components/Navbar";
 
 export default function Register() {
   const [name, setName] = useState("");
