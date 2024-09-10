@@ -1,9 +1,6 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { Description, Field, Label, Select } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import clsx from "clsx";
 
 export default function MemeCreator() {
   const [message, setMessage] = useState("");
