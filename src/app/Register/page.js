@@ -10,6 +10,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,10 +26,26 @@ export default function Register() {
     }
 
     try {
+
+      const resCheckUser = await fetch("http://localhost:3000/api/checkUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      })
+
+      const { user } = await resCheckUser.json();
+
+      if (user) {
+        setError("User already exits!");
+        return;
+      }
+
       const res = await fetch("http://localhost:3000/api/register", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           name,
@@ -40,6 +57,7 @@ export default function Register() {
       if (res.ok) {
         const form = e.target;
         setError("");
+        setSuccess("User registration successfully!");
         form.reset();
       } else {
         console.log("User registration failed.");
@@ -59,6 +77,11 @@ export default function Register() {
           {error && (
             <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
               {error}
+            </div>
+          )}
+          {success && (
+            <div className="bg-green-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
+              {success}
             </div>
           )}
 
@@ -95,7 +118,7 @@ export default function Register() {
         </form>
         <hr className="my-3" />
         <p>
-          Do not have an account? go to{" "}
+          Already have an account? Go to{" "}
           <Link className="text-blue-500 hover:underline" href={"/Login"}>
             Login
           </Link>{" "}

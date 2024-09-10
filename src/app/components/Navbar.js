@@ -10,6 +10,10 @@ export default function Navbar() {
                     <Link href={"/"}>Homepage</Link>
                 </div>
                 <ul className="flex">
+                    <li className="mx-3"><Link href={"/CatSearch"}>Cat Search</Link></li>
+                    <li className="mx-3"><Link href={"/MemeCreator"}>Meme Creator</Link></li>
+                </ul>
+                <ul className="flex">
                     <li className="mx-3"><Link href={"/Login"}>Sign In</Link></li>
                     <li className="mx-3"><Link href={"/Register"}>Sign Up</Link></li>
                 </ul>
