@@ -39,7 +39,7 @@ export default function MemeCreator() {
   const filteredItems = items.filter((item) =>
     item.name.toLowerCase().includes(message.toLowerCase())
   );
-  console.log(filteredItems);
+  // console.log(filteredItems);
 
   return (
     <main className="flex flex-col h-h-dvh">
