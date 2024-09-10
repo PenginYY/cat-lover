@@ -5,7 +5,7 @@ import { Description, Field, Label, Select } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 
-export default function CatSearch() {
+export default function MemeCreator() {
   const [message, setMessage] = useState("");
   const searchHandle = () => {};
   const messageHandle = (e) => {
@@ -22,6 +22,24 @@ export default function CatSearch() {
     // Update the message state
     setMessage(newMessage);
   };
+
+  // List of dropdown items
+  const items = [
+    { name: "About" },
+    { name: "Base" },
+    { name: "Blog" },
+    { name: "Contact" },
+    { name: "Custom" },
+    { name: "Support" },
+    { name: "Tools" },
+  ];
+
+  // console.log(searchName);
+  // Filtered items based on the search term
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(message.toLowerCase())
+  );
+  console.log(filteredItems);
 
   return (
     <main className="flex flex-col h-h-dvh">
@@ -48,7 +66,7 @@ export default function CatSearch() {
         <input
           className="bg-[#EAEAEA] text-center rounded w-1/3 h-10 border border-[#888]"
           type="text"
-          placeholder="Enter message"
+          placeholder="Search using keywords"
           maxLength="20"
           onChange={(e) => messageHandle(e)}
         />
@@ -61,79 +79,13 @@ export default function CatSearch() {
         </button>
       </div>
 
-      {/* Font Color */}
-      <div className="flex flex-row justify-center items-center space-x-10 mt-10">
-        <div className="flex flex-row space-x-*">
-          <div className="w-full max-w-md px-4">
-            <Field>
-              <Label className="text-sm/6 font-medium text-black">
-                Font Color
-              </Label>
-              <Description className="text-sm/6 text-black/50">
-                Choose the color of your message.
-              </Description>
-              <div className="bg-black ">
-                <Select
-                  className={clsx(
-                    "mt-3 block w-full appearance-none rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                    "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
-                    // Make the text of each option black on Windows
-                    "*:text-black"
-                  )}
-                >
-                  <option value="active">Green</option>
-                  <option value="paused">Orange</option>
-                  <option value="delayed">Red</option>
-                  <option value="canceled">Blue</option>
-                  <option value="canceled">Pink</option>
-                  <option value="canceled">Yellow</option>
-                  <option value="canceled">Purple</option>
-                </Select>
-                <ChevronDownIcon
-                  className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
-                  aria-hidden="true"
-                />
-              </div>
-            </Field>
-          </div>
-        </div>
-
-        {/* Font Size*/}
-        <div className="flex flex-row space-x-*">
-          <div className="w-full max-w-md px-4">
-            <Field>
-              <Label className="text-sm/6 font-medium text-black">
-                Font Size
-              </Label>
-              <Description className="text-sm/6 text-black/50">
-                Choose the size of your message.
-              </Description>
-              <div className="bg-black ">
-                <Select
-                  className={clsx(
-                    "mt-3 block w-full appearance-none rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                    "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
-                    // Make the text of each option black on Windows
-                    "*:text-black"
-                  )}
-                >
-                  <option value="10">10</option>
-                  <option value="12">12</option>
-                  <option value="14">14</option>
-                  <option value="16">16</option>
-                  <option value="18">18</option>
-                  <option value="20">20</option>
-                  <option value="22">22</option>
-                </Select>
-                <ChevronDownIcon
-                  className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
-                  aria-hidden="true"
-                />
-              </div>
-            </Field>
-          </div>
-        </div>
-      </div>
+      {filteredItems.map((item) => {
+        return (
+          <p key={item.name} className="inline-block text-center">
+            {item?.name}
+          </p>
+        );
+      })}
     </main>
   );
 }
