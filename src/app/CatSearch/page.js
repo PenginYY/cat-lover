@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import Navbar from "../components/Navbar";
 
 export default function MemeCreator() {
   const [message, setMessage] = useState("");
@@ -40,6 +41,7 @@ export default function MemeCreator() {
 
   return (
     <main className="flex flex-col h-h-dvh">
+      <Navbar />
       <div className="relative w-full h-64 md:h-96 lg:h-[1000px]">
         <Image
           src="/img/default-image.png"

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Description, Field, Label, Select } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
+import Navbar from "../components/Navbar";
 
 export default function CatSearch() {
   const [message, setMessage] = useState("");
@@ -25,6 +26,7 @@ export default function CatSearch() {
 
   return (
     <main className="flex flex-col h-h-dvh">
+      <Navbar />
       <div className="relative w-full h-64 md:h-96 lg:h-[1000px]">
         <Image
           src="/img/default-image.png"
