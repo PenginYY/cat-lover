@@ -5,23 +5,43 @@ import Navbar from "../components/Navbar";
 
 export default function MemeCreator() {
   const [message, setMessage] = useState("");
-  const searchHandle = () => {};
+  // default image
+  const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
+  const [error, setError] = useState("");
+
   const messageHandle = (e) => {
     const newMessage = e.target.value;
 
-    // Log the input value and update the state
-    console.log(newMessage);
-
-    // Check if the length of the message exceeds 20 characters
     if (newMessage.length >= 20) {
-      alert("The message limit at 20 characters!");
+      setError("The message limit is 20 characters!");
     }
-
-    // Update the message state
     setMessage(newMessage);
   };
 
-  // List of dropdown items
+  const searchHandle = async () => {
+    if (!message) {
+      setError("Please enter a message!");
+      return;
+    } else {
+      setError("");
+    }
+    // Build the API URL using user inputs
+    const encodedMessage = encodeURIComponent(message);
+    console.log(encodedMessage);
+
+    const apiUrl = `https://cataas.com/cat/${encodedMessage}?position=center`;
+
+    try {
+      const response = await fetch(apiUrl);
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob); // Convert blob to URL
+      setCatImageUrl(imageUrl); // Update the image state
+    } catch (error) {
+      console.error("Error fetching the cat meme:", error);
+    }
+  };
+
+  // List of dropdown keywords
   const items = [
     { name: "About" },
     { name: "Base" },
@@ -42,16 +62,26 @@ export default function MemeCreator() {
   return (
     <main className="flex flex-col h-h-dvh">
       <Navbar />
-      <div className="relative w-full h-64 md:h-96 lg:h-[1000px]">
+      {/* Display the cat image */}
+      <div className="relative w-full h-64 md:h-96 lg:h-[800px]">
         <Image
-          src="/img/default-image.png"
-          alt="Default picture"
+          src={catImageUrl}
+          alt="Generated cat meme"
           fill
-          className="object-cover"
+          priority={true}
+          className="object-contain" // Changed from object-cover to object-contain
         />
       </div>
 
-      <div className="flex justify-center items-center space-x-4 mt-10">
+      <div className="w-full flex justify-center items-center">
+        {error && (
+          <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
+            {error}
+          </div>
+        )}
+      </div>
+      {/* Input form */}
+      <div className="flex justify-center items-center space-x-4 mt-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="35"
@@ -65,12 +95,12 @@ export default function MemeCreator() {
         <input
           className="bg-[#EAEAEA] text-center rounded w-1/3 h-10 border border-[#888]"
           type="text"
-          placeholder="Search using keywords"
+          placeholder="Enter message"
           maxLength="20"
-          onChange={(e) => messageHandle(e)}
+          onChange={messageHandle}
         />
         <button
-          onClick={searchHandle()}
+          onClick={searchHandle}
           className="bg-black rounded text-white w-20 h-10"
           type="submit"
         >
