@@ -8,6 +8,15 @@ export default function MemeCreator() {
   // default image
   const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
   const [error, setError] = useState("");
+  const colors = [
+    "bg-red-500",
+    "bg-orange-500",
+    "bg-yellow-500",
+    "bg-green-500",
+    "bg-blue-500",
+    "bg-indigo-500",
+    "bg-purple-500",
+  ];
 
   const messageHandle = (e) => {
     const newMessage = e.target.value;
@@ -42,7 +51,7 @@ export default function MemeCreator() {
   };
 
   // List of dropdown keywords
-  const items = [
+  const keywords = [
     { name: "About" },
     { name: "Base" },
     { name: "Blog" },
@@ -53,11 +62,11 @@ export default function MemeCreator() {
   ];
 
   // console.log(searchName);
-  // Filtered items based on the search term
-  const filteredItems = items.filter((item) =>
+  // Filtered keywords based on the search term
+  const filteredKeywords = keywords.filter((item) =>
     item.name.toLowerCase().includes(message.toLowerCase())
   );
-  // console.log(filteredItems);
+  // console.log(filteredKeywords);
 
   return (
     <main className="flex flex-col h-h-dvh">
@@ -95,7 +104,7 @@ export default function MemeCreator() {
         <input
           className="bg-[#EAEAEA] text-center rounded w-1/3 h-10 border border-[#888]"
           type="text"
-          placeholder="Enter message"
+          placeholder="Searching using keyword"
           maxLength="20"
           onChange={messageHandle}
         />
@@ -108,13 +117,26 @@ export default function MemeCreator() {
         </button>
       </div>
 
-      {filteredItems.map((item) => {
-        return (
-          <p key={item.name} className="inline-block text-center">
-            {item?.name}
-          </p>
-        );
-      })}
+      <div className="flex justify-center items-center w-full h-fit">
+        <div className="flex justify-center items-center bg-zinc-200 w-1/3 h-fit mr-11 rounded py-5">
+          {filteredKeywords.map((item, index) => (
+            <div
+              key={item.name}
+              className={`${
+                colors[index % colors.length]
+              } text-black rounded mx-5 p-2`}
+            >
+              <input
+                type="checkbox"
+                className="inline-block text-center"
+                name={item.name}
+                id={item.name}
+              />
+              <label htmlFor={item.name}>{item.name}</label>
+            </div>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }
