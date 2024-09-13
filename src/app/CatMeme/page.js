@@ -9,8 +9,11 @@ import Navbar from "../components/Navbar";
 export default function CatSearch() {
   const [message, setMessage] = useState("");
   const [fontColor, setFontColor] = useState("#00FF00"); // default green color
-  const [fontSize, setFontSize] = useState(20); // default font size
-  const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png"); // default image
+  const [fontSize, setFontSize] = useState(25); // default font size
+  // default image
+  const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const messageHandle = (e) => {
     const newMessage = e.target.value;
@@ -18,7 +21,7 @@ export default function CatSearch() {
     if (newMessage.length >= 20) {
       alert("The message limit is 20 characters!");
     }
-
+    console.log(fontSize);
     setMessage(newMessage);
   };
 
@@ -136,13 +139,13 @@ export default function CatSearch() {
               )}
               onChange={(e) => setFontSize(e.target.value)}
             >
-              <option value="10">10</option>
-              <option value="12">12</option>
-              <option value="14">14</option>
-              <option value="16">16</option>
-              <option value="18">18</option>
-              <option value="20">20</option>
-              <option value="22">22</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+              <option value="35">35</option>
+              <option value="40">40</option>
+              <option value="45">45</option>
+              <option value="50">50</option>
+              <option value="55">55</option>
             </Select>
             <ChevronDownIcon
               className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
