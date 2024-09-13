@@ -4,10 +4,12 @@ import Image from "next/image";
 import Navbar from "../components/Navbar";
 
 export default function MemeCreator() {
+  const [selectedTag, setSelectedTag] = useState("");
   const [message, setMessage] = useState("");
   // default image
   const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
   const [error, setError] = useState("");
+
   const colors = [
     "bg-red-500",
     "bg-orange-500",
@@ -18,22 +20,31 @@ export default function MemeCreator() {
     "bg-purple-500",
   ];
 
-  const messageHandle = (e) => {
-    const newMessage = e.target.value;
+  // Handle checkbox changes
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
 
-    if (newMessage.length >= 20) {
-      setError("The message limit is 20 characters!");
+    if (checked) {
+      if (selectedTag) {
+        // If there's already a selected tag, show error
+        setError("Choose only 1 keyword!");
+      } else {
+        // Set the selected tag
+        setSelectedTag(name);
+        setMessage(name); // Update the message with the selected tag
+        setError(""); // Clear any previous error
+      }
+    } else {
+      // Checkbox was unchecked
+      if (selectedTag === name) {
+        setSelectedTag(""); // Clear the selected tag
+        setMessage(""); // Clear the message
+        setError(""); // Clear any previous error
+      }
     }
-    setMessage(newMessage);
   };
 
   const searchHandle = async () => {
-    if (!message) {
-      setError("Please enter a message!");
-      return;
-    } else {
-      setError("");
-    }
     // Build the API URL using user inputs
     const encodedMessage = encodeURIComponent(message);
     console.log(encodedMessage);
@@ -52,13 +63,13 @@ export default function MemeCreator() {
 
   // List of dropdown keywords
   const keywords = [
-    { name: "About" },
-    { name: "Base" },
-    { name: "Blog" },
-    { name: "Contact" },
-    { name: "Custom" },
-    { name: "Support" },
-    { name: "Tools" },
+    { name: "Angry" },
+    { name: "Baby" },
+    { name: "Bed" },
+    { name: "Catto" },
+    { name: "Evil" },
+    { name: "Fluffy" },
+    { name: "Grumpy" },
   ];
 
   // console.log(searchName);
@@ -104,9 +115,9 @@ export default function MemeCreator() {
         <input
           className="bg-[#EAEAEA] text-center rounded w-1/3 h-10 border border-[#888]"
           type="text"
-          placeholder="Searching using keyword"
+          placeholder="Search by keyword"
           maxLength="20"
-          onChange={messageHandle}
+          onChange={handleCheckboxChange}
         />
         <button
           onClick={searchHandle}
@@ -131,6 +142,7 @@ export default function MemeCreator() {
                 className="inline-block text-center"
                 name={item.name}
                 id={item.name}
+                onChange={handleCheckboxChange}
               />
               <label htmlFor={item.name}>{item.name}</label>
             </div>
