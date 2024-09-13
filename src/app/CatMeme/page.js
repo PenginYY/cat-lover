@@ -9,27 +9,30 @@ import Navbar from "../components/Navbar";
 export default function CatSearch() {
   const [message, setMessage] = useState("");
   const [fontColor, setFontColor] = useState("#00FF00"); // default green color
-  const [fontSize, setFontSize] = useState(20); // default font size
-  const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png"); // default image
+  const [fontSize, setFontSize] = useState(25); // default font size
+  // default image
+  const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
+  const [error, setError] = useState("");
 
   const messageHandle = (e) => {
     const newMessage = e.target.value;
 
     if (newMessage.length >= 20) {
-      alert("The message limit is 20 characters!");
+      setError("The message limit is 20 characters!");
     }
-
     setMessage(newMessage);
   };
 
   const searchHandle = async () => {
     if (!message) {
-      alert("Please enter a message.");
+      setError("Please enter a message!");
       return;
+    } else {
+      setError("");
     }
-
     // Build the API URL using user inputs
     const encodedMessage = encodeURIComponent(message);
+    console.log(encodedMessage);
     const encodedFontColor = fontColor.replace("#", "%23"); // URL encode the color
 
     const apiUrl = `https://cataas.com/cat/says/${encodedMessage}?font=Impact&fontSize=${fontSize}&fontColor=${encodedFontColor}&fontBackground=none&position=center`;
@@ -54,12 +57,20 @@ export default function CatSearch() {
           src={catImageUrl}
           alt="Generated cat meme"
           fill
+          priority={true}
           className="object-contain" // Changed from object-cover to object-contain
         />
       </div>
 
+      <div className="w-full flex justify-center items-center">
+        {error && (
+          <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
+            {error}
+          </div>
+        )}
+      </div>
       {/* Input form */}
-      <div className="flex justify-center items-center space-x-4 mt-10">
+      <div className="flex justify-center items-center space-x-4 mt-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="35"
@@ -78,7 +89,7 @@ export default function CatSearch() {
           onChange={messageHandle}
         />
         <button
-          onClick={searchHandle} // Fix the function call here
+          onClick={searchHandle}
           className="bg-black rounded text-white w-20 h-10"
           type="submit"
         >
@@ -88,7 +99,7 @@ export default function CatSearch() {
 
       {/* Font Color */}
       <div className="flex flex-row justify-center items-center space-x-10 mt-10">
-        <div className="w-full max-w-md px-4">
+        <div className="w-full max-w-md px-4 mb-10">
           <Field>
             <Label className="text-sm/6 font-medium text-black">
               Font Color
@@ -120,7 +131,7 @@ export default function CatSearch() {
         </div>
 
         {/* Font Size */}
-        <div className="w-full max-w-md px-4">
+        <div className="w-full max-w-md px-4 mb-10">
           <Field>
             <Label className="text-sm/6 font-medium text-black">
               Font Size
@@ -136,13 +147,13 @@ export default function CatSearch() {
               )}
               onChange={(e) => setFontSize(e.target.value)}
             >
-              <option value="10">10</option>
-              <option value="12">12</option>
-              <option value="14">14</option>
-              <option value="16">16</option>
-              <option value="18">18</option>
-              <option value="20">20</option>
-              <option value="22">22</option>
+              <option value="25">25</option>
+              <option value="30">30</option>
+              <option value="35">35</option>
+              <option value="40">40</option>
+              <option value="45">45</option>
+              <option value="50">50</option>
+              <option value="55">55</option>
             </Select>
             <ChevronDownIcon
               className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"

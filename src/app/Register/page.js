@@ -16,7 +16,7 @@ export default function Register() {
     e.preventDefault();
 
     if (password != confirmPassword) {
-      setError("Password do not match!");
+      setError("Username or Password is invalid!");
       return;
     }
 
