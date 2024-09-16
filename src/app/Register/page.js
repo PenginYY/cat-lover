@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Navbar from "../Components/Navbar";
+import Navbar from "../components/Navbar";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
@@ -12,7 +12,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("")
+  const [success, setSuccess] = useState("");
 
   const { data: session } = useSession();
   if (session) redirect("/Welcome");
@@ -21,7 +21,7 @@ export default function Register() {
     e.preventDefault();
 
     if (password != confirmPassword) {
-      setError("Password do not match!");
+      setError("Username or Password is invalid!");
       return;
     }
 
@@ -31,14 +31,13 @@ export default function Register() {
     }
 
     try {
-
       const resCheckUser = await fetch("http://localhost:3000/api/checkUser", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email })
-      })
+        body: JSON.stringify({ email }),
+      });
 
       const { user } = await resCheckUser.json();
 
@@ -50,7 +49,7 @@ export default function Register() {
       const res = await fetch("http://localhost:3000/api/register", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name,
