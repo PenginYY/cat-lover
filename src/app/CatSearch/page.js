@@ -93,6 +93,42 @@ export default function MemeCreator() {
     }
   };
 
+  const searchHandle = async () => {
+    // Build the API URL using user inputs
+    const encodedMessage = encodeURIComponent(message);
+    console.log(encodedMessage);
+
+    const apiUrl = `https://cataas.com/cat/${encodedMessage}?position=center`;
+
+    try {
+      const response = await fetch(apiUrl);
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob); // Convert blob to URL
+      setCatImageUrl(imageUrl); // Update the image state
+    } catch (error) {
+      console.error("Error fetching the cat meme:", error);
+    }
+  };
+
+  // List of dropdown keywords
+  const keywords = [
+    { name: "Angry" },
+    { name: "Baby" },
+    { name: "Bed" },
+    { name: "Catto" },
+    { name: "Evil" },
+    { name: "Fluffy" },
+    { name: "Grumpy" },
+  ];
+
+  // console.log(searchName);
+  // Filtered keywords based on the search term
+  const filteredKeywords = keywords.filter((item) =>
+    item.name.toLowerCase().includes(message.toLowerCase())
+  );
+  // console.log(filteredKeywords);
+  const favoriteHandler = () => {};
+
   return (
     <main className="flex flex-col h-h-dvh">
       <Navbar />
