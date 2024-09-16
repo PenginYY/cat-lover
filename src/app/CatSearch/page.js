@@ -78,7 +78,20 @@ export default function MemeCreator() {
     item.name.toLowerCase().includes(message.toLowerCase())
   );
   // console.log(filteredKeywords);
-  const favoriteHandler = () => {};
+  const favoriteHandler = async (memeId) => {
+    try {
+      await fetch('/api/favorites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: session.user.id, memeId }),
+      });
+      alert('Added to favorites!');
+    } catch (error) {
+      console.error("Failed to add favorite", error);
+    }
+  };
 
   return (
     <main className="flex flex-col h-h-dvh">

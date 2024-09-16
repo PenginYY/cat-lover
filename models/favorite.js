@@ -1,19 +1,18 @@
 import mongoose, { Schema } from "mongoose";
-import Keyword from "./keyword";
 
 const favoriteSchema = new Schema({
     useId: {
         type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+        ref: "User", // Reference to the User model
+        required: true,
     },
     imageUrl: {
         type: String,
-        required: true
+        required: true,
     },
     Keywords: [{
         type: Schema.Types.ObjectId,
-        ref: "Keyword"
+        ref: "Keyword", // Reference to the Keyword model
     }],
 }, { timestamps: true });
 
