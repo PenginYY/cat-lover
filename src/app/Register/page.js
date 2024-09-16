@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Navbar from "../Components/Navbar";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -11,6 +13,9 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("")
+
+  const { data: session } = useSession();
+  if (session) redirect("/Welcome");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,6 +79,7 @@ export default function Register() {
         <h3>Register Page</h3>
         <hr className="my-3" />
         <form onSubmit={handleSubmit}>
+          
           {error && (
             <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
               {error}
