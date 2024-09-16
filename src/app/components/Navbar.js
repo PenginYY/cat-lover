@@ -12,23 +12,31 @@ export default function Navbar({ session }) {
                     <div>
                         <Link href={"/"}>Homepage</Link>
                     </div>
-                    <ul className="flex">
-                        <li className="mx-3"><Link href={"/CatSearch"}>Cat Search</Link></li>
-                        <li className="mx-3"><Link href={"/MemeCreator"}>Meme Creator</Link></li>
-                    </ul>
-                    <ul className="flex">
-                        {!session ? (
-                            <>
+                    {!session ? (
+                        <>
+                            <ul className="flex">
+                                <li className="mx-3"><Link href={"/CatSearch"}>Cat Search</Link></li>
+                                <li className="mx-3"><Link href={"/CatMeme"}>Meme Creator</Link></li>
+                            </ul>
+                            <ul className="flex">
                                 <li className="mx-3"><Link href={"/Login"}>Sign In</Link></li>
                                 <li className="mx-3"><Link href={"/Register"}>Sign Up</Link></li>
-                            </>
-                        ) : (
-                            <>
+                            </ul>
+
+                        </>
+                    ) : (
+                        <>
+                            <ul className="flex">
+                                <li className="mx-3"><Link href={"/CatSearch"}>Cat Search</Link></li>
+                                <li className="mx-3"><Link href={"/CatMeme"}>Meme Creator</Link></li>
+                            </ul>
+                            <ul className="flex">
+                                <li className="mx-3"><a href={"/Favorite"}>Your Favorite</a></li>
                                 <li className="mx-3"><a href="/Welcome" className="bg-gray-500 text-white border py-2 px-3 rounded-md text-lg my-2">Profile</a></li>
                                 <li className="mx-3"><a onClick={() => signOut()} className="bg-red-500 text-white border py-2 px-3 rounded-md text-lg my-2">Sign Out</a></li>
-                            </>
-                        )}
-                    </ul>
+                            </ul>
+                        </>
+                    )}
                 </div>
             </div>
         </nav>

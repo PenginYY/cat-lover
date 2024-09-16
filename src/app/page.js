@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <main>
-      <Navbar />
+      <Navbar session={session}/>
       <h1>Home page</h1>
     </main>
   );
