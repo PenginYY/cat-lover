@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Navbar from "../components/Navbar";
 
-export default function MemeCreator() {
+export default function CatSearch() {
   const [selectedTag, setSelectedTag] = useState("");
   const [message, setMessage] = useState("");
   // default image

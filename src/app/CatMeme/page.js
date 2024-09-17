@@ -6,7 +6,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import Navbar from "../components/Navbar";
 
-export default function CatSearch() {
+export default function CatMeme() {
   const [message, setMessage] = useState("");
   const [fontColor, setFontColor] = useState("#00FF00"); // default green color
   const [fontSize, setFontSize] = useState(25); // default font size
