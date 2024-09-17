@@ -70,7 +70,7 @@ export default function Login() {
         </form>
         <hr className="my-3" />
         <p>
-          Don't have an account? Go to{" "}
+          Don&apos;t have an account? Go to{" "}
           <Link className="text-blue-500 hover:underline" href={"/Register"}>
             Register
           </Link>{" "}
