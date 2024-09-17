@@ -5,8 +5,11 @@ import { Description, Field, Label, Select } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import Navbar from "../components/Navbar";
+import { useSession } from "next-auth/react";
 
-export default function CatMeme() {
+export default function CatSearch() {
+  const { data: session } = useSession();
+
   const [message, setMessage] = useState("");
   const [fontColor, setFontColor] = useState("#00FF00"); // default green color
   const [fontSize, setFontSize] = useState(25); // default font size
@@ -51,7 +54,7 @@ export default function CatMeme() {
 
   return (
     <main className="flex flex-col h-h-dvh">
-      <Navbar />
+      <Navbar session={session} />
 
       {/* Display the cat image */}
       <div className="relative w-full h-64 md:h-96 lg:h-[800px]">

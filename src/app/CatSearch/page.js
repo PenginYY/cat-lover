@@ -2,8 +2,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import Navbar from "../components/Navbar";
+import { useSession } from "next-auth/react";
 
-export default function CatSearch() {
+export default function MemeCreator() {
+  const { data: session } = useSession();
+
   const [selectedTag, setSelectedTag] = useState("");
   const [message, setMessage] = useState("");
   // default image
@@ -78,11 +81,29 @@ export default function CatSearch() {
     item.name.toLowerCase().includes(message.toLowerCase())
   );
   // console.log(filteredKeywords);
-  const favoriteHandler = () => {};
+
+  // Add to favorite
+  const favoriteHandler = async () => {
+    try {
+      await fetch("/api/favorites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: session.user.id,
+          selectedTag,
+          message,
+          catImageUrl,
+        }),
+      });
+      alert("Added to favorites!");
+    } catch (error) {
+      console.error("Failed to add favorite", error);
+    }
+  };
 
   return (
     <main className="flex flex-col h-h-dvh">
-      <Navbar />
+      <Navbar session={session} />
       {/* Display the cat image */}
       <div className="relative w-full h-64 md:h-96 lg:h-[800px]">
         <Image

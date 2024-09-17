@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -12,21 +14,24 @@ export default function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const { data: session } = useSession();
+  if (session) redirect("/Welcome");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password != confirmPassword) {
-      setError("Username or Password is invalid!");
+      setError("Passwords do not match!");
       return;
     }
 
     if (!name || !email || !password || !confirmPassword) {
-      setError("Please complete all input!");
+      setError("Please fill in all fields!");
       return;
     }
 
     try {
-      const resCheckUser = await fetch("http://localhost:3000/api/checkUser", {
+      const resCheckUser = await fetch("/api/checkUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,34 +40,29 @@ export default function Register() {
       });
 
       const { user } = await resCheckUser.json();
-
       if (user) {
         setError("User already exits!");
         return;
       }
 
-      const res = await fetch("http://localhost:3000/api/register", {
+      // Register user
+      const resRegister = await fetch("/api/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
       });
 
-      if (res.ok) {
+      if (resRegister.ok) {
         const form = e.target;
         setError("");
-        setSuccess("User registration successfully!");
+        setSuccess("User registered successfully!");
         form.reset();
       } else {
-        console.log("User registration failed.");
+        setError("User registration failed.");
       }
     } catch (error) {
-      console.log("Error during registration: ", error);
+      setError("An error occurred during registration.");
+      console.log("Error: ", error);
     }
   };
 
@@ -73,6 +73,7 @@ export default function Register() {
         <h3>Register Page</h3>
         <hr className="my-3" />
         <form onSubmit={handleSubmit}>
+
           {error && (
             <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
               {error}
