@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectMongoDB } from "../../../../lib/registerdb";
+import { connectMongoDB } from "../../../../lib/mongodb";
 import User from "../../../../models/user";
 import bcrypt from "bcryptjs"
 
@@ -13,6 +13,6 @@ export async function POST(req) {
 
         return NextResponse.json({ message: "User registered."}, { status: 201 });
     } catch(error) {
-        return NextResponse.json({ message: "An error occured while registrating the user."}, { status: 500 });
+        return NextResponse.json({ message: "An error occurred while registering the user."}, { status: 500 });
     }
 }
