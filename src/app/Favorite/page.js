@@ -56,26 +56,5 @@ export default function Favorite() {
         </div>
       </div>
     </main>
-    // <main>
-    //   <Navbar session={session}/>
-    //   <h1 className="text-center text-2xl font-bold my-5">Favorite Cat Memes</h1>
-    //   {error && <p className="text-red-500">{error}</p>}
-    //   {favorites.length === 0 ? (
-    //     <p>No favorite memes yet!</p>
-    //   ) : (
-    //     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    //       {favorites.map((favorite) => (
-    //         <div key={favorite.memeId} className="border p-4 rounded-md">
-    //           <img src={`https://your-image-source.com/${favorite.memeId}`} alt={`Meme ${favorite.memeId}`} className="w-full h-auto" />
-    //           <button onClick={() => handleRemoveFavorite(favorite.memeId)} className="mt-2 bg-red-500 text-white p-2 rounded">
-    //             Remove from Favorites
-    //           </button>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   )}
-    //   <div></div>
-    //   <div></div>
-    // </main>
   );
 }
