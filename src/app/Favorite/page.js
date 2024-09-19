@@ -1,9 +1,8 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-
 
 export default function Favorite() {
   const { data: session } = useSession();
@@ -11,16 +10,17 @@ export default function Favorite() {
   const [favorites, setFavorites] = useState([]);
   const [error, setError] = useState("");
 
+  const fetchFavorites = async () => {
+    try {
+      const res = await fetch(`/api/favorites?userId=${session.user.id}`);
+      const data = await res.json();
+      setFavorites(data.favorites);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const res = await fetch(`/api/favorites?userId=${session.user.id}`);
-        const data = await res.json();
-        setFavorites(data.favorites);
-      } catch (error) {
-        console.error("Error fetching favorites:", error);
-      }
-    };
     if (session?.user?.id) {
       fetchFavorites();
     }
@@ -36,7 +36,10 @@ export default function Favorite() {
         <hr className="my-3" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {favorites.map((fav) => (
-            <div key={fav._id} className="relative w-full h-64 md:h-96 lg:h-[800px]">
+            <div
+              key={fav._id}
+              className="relative w-full h-64 md:h-96 lg:h-[800px]"
+            >
               <Image
                 src={fav.catImageUrl}
                 alt={`Meme with tag: ${fav.selectedTag}`}
