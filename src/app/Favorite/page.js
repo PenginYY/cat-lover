@@ -8,20 +8,34 @@ export default function Favorite() {
   const { data: session } = useSession();
 
   const [favorites, setFavorites] = useState([]);
-  const [error, setError] = useState("");
 
   const fetchFavorites = async () => {
     try {
-      const res = await fetch(`/api/favorites?userId=${session.user.id}`);
+      // Ensure session.user.email is defined before making the request
+      if (!session?.user?.email) {
+        throw new Error("User email is not available.");
+      }
+
+      const res = await fetch(`/api/favorites?userEmail=${session.user.email}`);
+
+      // Check if the response is OK (status 200-299)
+      if (!res.ok) {
+        throw new Error(
+          `Failed to fetch favorites: ${res.status} ${res.statusText}`
+        );
+      }
+
       const data = await res.json();
-      setFavorites(data.favorites);
+
+      // Assuming the response has a structure like { favorites: [...] }
+      setFavorites(data);
     } catch (error) {
       console.error("Error fetching favorites:", error);
     }
   };
 
   useEffect(() => {
-    if (session?.user?.id) {
+    if (session?.user?.email) {
       fetchFavorites();
     }
   }, [session]);

@@ -47,19 +47,34 @@ export async function POST(req) {
   }
 }
 
-//not tested yet
+//Tested
 export async function GET(req) {
   try {
+    // Connect to MongoDB
     await connectMongoDB();
-    const info = await req.json();
-    // const user = await Favorite.findOne({ email }).select("email");
-    // console.log("User: ", user);
 
-    return NextResponse.json({ info });
+    // Get the URL search params to extract the userEmail query param
+    const { searchParams } = new URL(req.url);
+    const userEmail = searchParams.get("userEmail");
+
+    // Check if userEmail is provided
+    if (!userEmail) {
+      return NextResponse.json(
+        { message: "User email is required" },
+        { status: 400 } // Bad request
+      );
+    }
+
+    // Fetch the user's favorites based on their email
+    const favorites = await Favorite.find({ userEmail: userEmail });
+
+    // Return the favorites array in the response
+    return NextResponse.json({ favorites });
   } catch (error) {
+    console.error("Error fetching favorites:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 } // Internal Server Error
     );
   }
 }
