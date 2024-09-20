@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const favoriteSchema = new Schema({
+    // useId, catmemeId, name of the card
     useId: {
         type: Schema.Types.ObjectId,
         ref: "User", // Reference to the User model
