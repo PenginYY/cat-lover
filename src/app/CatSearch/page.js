@@ -2,11 +2,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Navbar from "../components/Navbar";
-import { useSession } from 'next-auth/react'
+import { useSession } from "next-auth/react";
 
 export default function MemeCreator() {
   const { data: session } = useSession();
 
+  const [favorited, setFavorite] = useState(false);
   const [selectedTag, setSelectedTag] = useState("");
   const [message, setMessage] = useState("");
   // default image
@@ -84,21 +85,48 @@ export default function MemeCreator() {
 
   // Add to favorite
   const favoriteHandler = async () => {
-    try {
-      await fetch('/api/favorites', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: session.user.id, selectedTag, message, catImageUrl }),
-      });
-      alert('Added to favorites!');
-    } catch (error) {
-      console.error("Failed to add favorite", error);
+    const title = "Untitled";
+    if (!favorited && catImageUrl !== "/img/default-image.png") {
+      // console.log("Preparing to send data:", {
+      //   userEmail: session.user.email,
+      //   title,
+      //   selectedTag,
+      //   message,
+      //   catImageUrl,
+      // });
+      try {
+        const response = await fetch("/api/favorites", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userEmail: session.user.email,
+            title,
+            selectedTag,
+            message,
+            catImageUrl,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        alert("Added to favorites!");
+        setFavorite(true);
+      } catch (error) {
+        console.error("Failed to add favorite", error);
+      }
+    }
+
+    if (catImageUrl === "/img/default-image.png") {
+      alert("search first!");
+      setFavorite(false);
     }
   };
 
   return (
     <main className="flex flex-col h-h-dvh">
-      <Navbar session={session}/>
+      <Navbar session={session} />
       {/* Display the cat image */}
       <div className="relative w-full h-64 md:h-96 lg:h-[800px]">
         <Image
@@ -108,20 +136,37 @@ export default function MemeCreator() {
           priority={true}
           className="object-contain" // Changed from object-cover to object-contain
         />
+
         <button
           className="absolute text-black right-10 bottom-10"
           onClick={favoriteHandler}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-heart size-10"
-            viewBox="0 0 16 16"
-          >
-            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
-          </svg>
+          {favorited ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-heart-fill size-10"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-heart size-10"
+              viewBox="0 0 16 16"
+            >
+              <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+            </svg>
+          )}
         </button>
       </div>
 
