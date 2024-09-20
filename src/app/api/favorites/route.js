@@ -50,17 +50,15 @@ export async function POST(req) {
 //not tested yet
 export async function GET(req) {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
-
     await connectMongoDB();
-    const favorites = await Favorite.find({ userId });
+    const info = await req.json();
+    // const user = await Favorite.findOne({ email }).select("email");
+    // console.log("User: ", user);
 
-    return NextResponse.json({ favorites });
+    return NextResponse.json({ info });
   } catch (error) {
-    console.error("Error fetching favorites:", error);
     return NextResponse.json(
-      { message: "Failed to fetch favorites." },
+      { message: "Internal Server Error" },
       { status: 500 }
     );
   }

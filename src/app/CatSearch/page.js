@@ -49,6 +49,7 @@ export default function MemeCreator() {
   };
 
   const searchHandle = async () => {
+    setFavorite(false);
     // Build the API URL using user inputs
     const encodedMessage = encodeURIComponent(message);
     console.log(encodedMessage);
@@ -85,6 +86,7 @@ export default function MemeCreator() {
 
   // Add to favorite
   const favoriteHandler = async () => {
+    setFavorite(true);
     const title = "Untitled";
     if (!favorited && catImageUrl !== "/img/default-image.png") {
       // console.log("Preparing to send data:", {
@@ -112,7 +114,6 @@ export default function MemeCreator() {
         }
 
         alert("Added to favorites!");
-        setFavorite(true);
       } catch (error) {
         console.error("Failed to add favorite", error);
       }
@@ -151,7 +152,7 @@ export default function MemeCreator() {
               viewBox="0 0 16 16"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
               />
             </svg>
