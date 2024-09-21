@@ -17,10 +17,10 @@ export default function Navbar({ session }) {
               {/* Show only "Register" and "Login" when the user is not logged in */}
               <ul className="flex">
                 <li className="mx-3">
-                  <Link href={"/Login"}>Sign In</Link>
+                  <Link href={"/Login"} className="hover:underline">Sign In</Link>
                 </li>
                 <li className="mx-3">
-                  <Link href={"/Register"}>Sign Up</Link>
+                  <Link href={"/Register"} className="hover:underline">Sign Up</Link>
                 </li>
               </ul>
             </>
@@ -29,21 +29,21 @@ export default function Navbar({ session }) {
               {/* Full navigation is only shown when the user is logged in */}
               <ul className="flex">
                 <li className="mx-3">
-                  <Link href={"/CatSearch"}>Cat Search</Link>
+                  <Link href={"/CatSearch"} className="hover:underline">Cat Search</Link>
                 </li>
                 <li className="mx-3">
-                  <Link href={"/CatMeme"}>Meme Creator</Link>
+                  <Link href={"/CatMeme"} className="hover:underline">Meme Creator</Link>
                 </li>
                 <li className="mx-3">
-                  <a href={"/Favorite"}>Your Favorite</a>
+                  <Link href={"/Favorite"} className="hover:underline">Your Favorite</Link>
                 </li>
                 <li className="mx-3">
-                  <a
-                    href="/Welcome"
+                  <Link
+                    href={"/Profile"}
                     className="bg-gray-500 text-white border py-2 px-3 rounded-md text-lg my-2"
                   >
                     Profile
-                  </a>
+                  </Link>
                 </li>
                 <li className="mx-3">
                   <a
