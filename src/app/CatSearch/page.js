@@ -58,9 +58,13 @@ export default function MemeCreator() {
 
     try {
       const response = await fetch(apiUrl);
-      const blob = await response.blob();
-      const imageUrl = URL.createObjectURL(blob); // Convert blob to URL
-      setCatImageUrl(imageUrl); // Update the image state
+      if (response.ok) {
+        const imageUrl = response.url; // This is the direct image URL from the API
+        console.log(imageUrl); // Log the URL for confirmation
+
+        // Set the image URL in the state to display in the UI
+        setCatImageUrl(imageUrl);
+      }
     } catch (error) {
       console.error("Error fetching the cat meme:", error);
     }
