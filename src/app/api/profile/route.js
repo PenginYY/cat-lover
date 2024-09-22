@@ -24,38 +24,21 @@ export async function PATCH(req) {
     }
 }
 
-// export async function PATCH(req) {
-//     try {
-//         const session = await getSession({ req });
-//         if (!session) {
-//             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-//         }
+export async function DELETE(req) {
+    try {
+        await connectMongoDB();
+        const { email, password } = await req.json();
+        const user = await User.findOne({ email }).select("password");
 
-//         const { name, email, password } = await req.json();
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return NextResponse.json({ message: "Invalid password" }, { status: 401 });
+        }
 
-//         await connectMongoDB();
-
-//         // Find the user by session user ID
-//         const user = await User.findById(session.user.email);
-
-//         if (!user) {
-//             return NextResponse.json({ message: "User not found" }, { status: 404 });
-//         }
-
-//         // Update fields only if they are provided
-//         if (name) user.name = name;
-//         if (email) user.email = email;
-
-//         // Update password only if provided
-//         if (password) {
-//             user.password = await bcrypt.hash(password, 10);
-//         }
-
-//         await user.save();
-
-//         return NextResponse.json({ message: "Profile updated successfully" });
-//     } catch (error) {
-//         console.error(error);
-//         return NextResponse.json({ message: "An error occurred while updating the profile" }, { status: 500 });
-//     }
-// }
+        await User.findOneAndDelete({ email });
+        return NextResponse.json({ message: "User profile deleted successfully" }, { status: 200 });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    }
+}
