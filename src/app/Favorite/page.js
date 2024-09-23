@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
+import { Card, CardBody, Image } from "@nextui-org/react";
 
 export default function Favorite() {
   const { data: session } = useSession();
@@ -29,6 +29,15 @@ export default function Favorite() {
     }
   };
 
+  // Function to handle title change for a specific favorite
+  const changeTitleHandler = (e, favId) => {
+    console.log(e.target.value);
+    const updatedFavorites = favorites.map((fav) =>
+      fav._id === favId ? { ...fav, title: e.target.value } : fav
+    );
+    setFavorites(updatedFavorites);
+  };
+
   useEffect(() => {
     if (session?.user?.email) {
       fetchFavorites();
@@ -41,27 +50,33 @@ export default function Favorite() {
       <div className="container mx-auto">
         <h3 className="text-3xl my-3">Your Favorite Memes</h3>
         <hr className="my-3" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-rows-*">
           {favorites && favorites.length > 0 ? (
             favorites.map((fav) => (
-              <div
+              <Card
                 key={fav._id}
-                className="relative w-full h-64 md:h-96 lg:h-[800px]"
+                className="relative w-full h-100vh md:h-96 lg:h-[800px]"
               >
-                {/* Using Next.js Image component */}
-                <Image
-                  src={fav.catImageUrl} // Ensure this is a valid public URL
-                  alt={`Meme with tag: ${fav.selectedTag || "No tag"}`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  priority
-                  className="object-contain"
-                />
-                <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 w-full p-2 text-black">
-                  <input value={fav.title} />
-                  <p>{fav.message || "No message"}</p>
-                </div>
-              </div>
+                <CardBody className="p-0">
+                  <Image
+                    src={fav.catImageUrl} // Ensure this is a valid public URL
+                    alt={`Meme with tag: ${fav.selectedTag || "No tag"}`}
+                    width="auto"
+                    height="auto"
+                    priority="true"
+                    objectfit="contain"
+                    className="rounded-xl w-auto h-auto max-w-full max-h-full"
+                  />
+                  <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 w-auto p-2 text-white rounded-xl">
+                    <input
+                      value={fav.title || ""}
+                      className="bg-transparent text-white font-bold w-full"
+                      onChange={(e) => changeTitleHandler(e, fav._id)}
+                    />
+                    <p>{fav.message || "No message"}</p>
+                  </div>
+                </CardBody>
+              </Card>
             ))
           ) : (
             <p>No favorites available.</p>
