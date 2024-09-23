@@ -65,7 +65,7 @@ export default function Favorite() {
     if (session?.user?.email) {
       fetchFavorites();
     }
-  }, [session]);
+  }, [session, fetchFavorites]);
 
   return (
     <main className="flex flex-col h-h-dvh">
