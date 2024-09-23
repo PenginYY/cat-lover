@@ -30,12 +30,35 @@ export default function Favorite() {
   };
 
   // Function to handle title change for a specific favorite
-  const changeTitleHandler = (e, favId) => {
-    console.log(e.target.value);
+  const changeTitleHandler = async (e, favId) => {
+    const newTitle = e.target.value;
+    console.log(newTitle);
+
     const updatedFavorites = favorites.map((fav) =>
-      fav._id === favId ? { ...fav, title: e.target.value } : fav
+      fav._id === favId ? { ...fav, title: newTitle } : fav
     );
     setFavorites(updatedFavorites);
+
+    // handle the API request to update the title in the database
+    try {
+      const response = await fetch("/api/favorites", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          favId, // Send the ID of the favorite being updated
+          title: newTitle, // Send the new title value
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error updating title: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log("Update successful:", result);
+    } catch (error) {
+      console.error("Error updating title:", error);
+    }
   };
 
   useEffect(() => {

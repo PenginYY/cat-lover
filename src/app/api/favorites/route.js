@@ -82,17 +82,40 @@ export async function GET(req) {
 //not tested yet
 export async function PUT(req) {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
+    // Parse the request body
+    const body = await req.json();
+    const { favId, title } = body; // Extract the favorite ID and the new title
+    console.log(favId, title);
 
+    if (!favId || !title) {
+      return NextResponse.json(
+        { message: "Favorite ID and title are required." },
+        { status: 400 }
+      );
+    }
+
+    // Connect to MongoDB
     await connectMongoDB();
-    const favoritesDel = await Favorite.collection("favorites").deleteOne({});
 
-    return NextResponse.json({ favoritesDel });
+    // Find the favorite by ID and update the title
+    const result = await Favorite.updateOne(
+      { _id: favId }, // Filter by favorite ID
+      { $set: { title: title } } // Update the title field
+    );
+
+    if (result.modifiedCount === 0) {
+      return NextResponse.json(
+        { message: "Favorite not found or title not updated." },
+        { status: 404 }
+      );
+    }
+
+    // Respond with the updated favorite
+    return NextResponse.json({ message: "Title updated successfully." });
   } catch (error) {
-    console.error("Error deleting favorites:", error);
+    console.error("Error updating favorite:", error);
     return NextResponse.json(
-      { message: "Failed to delete favorites." },
+      { message: "Failed to update favorite." },
       { status: 500 }
     );
   }
