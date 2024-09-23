@@ -2,17 +2,26 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
+import { Card, CardBody, Image } from "@nextui-org/react";
 
 export default function Favorite() {
   const { data: session } = useSession();
-
   const [favorites, setFavorites] = useState([]);
-  const [error, setError] = useState("");
 
   const fetchFavorites = async () => {
     try {
-      const res = await fetch(`/api/favorites?userId=${session.user.id}`);
+      if (!session?.user?.email) {
+        throw new Error("User email is not available.");
+      }
+
+      const res = await fetch(`/api/favorites?userEmail=${session.user.email}`);
+
+      if (!res.ok) {
+        throw new Error(
+          `Failed to fetch favorites: ${res.status} ${res.statusText}`
+        );
+      }
+
       const data = await res.json();
       setFavorites(data.favorites);
     } catch (error) {
@@ -20,13 +29,43 @@ export default function Favorite() {
     }
   };
 
+  // Function to handle title change for a specific favorite
+  const changeTitleHandler = async (e, favId) => {
+    const newTitle = e.target.value;
+    console.log(newTitle);
+
+    const updatedFavorites = favorites.map((fav) =>
+      fav._id === favId ? { ...fav, title: newTitle } : fav
+    );
+    setFavorites(updatedFavorites);
+
+    // handle the API request to update the title in the database
+    try {
+      const response = await fetch("/api/favorites", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          favId, // Send the ID of the favorite being updated
+          title: newTitle, // Send the new title value
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error updating title: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log("Update successful:", result);
+    } catch (error) {
+      console.error("Error updating title:", error);
+    }
+  };
+
   useEffect(() => {
-    if (session?.user?.id) {
+    if (session?.user?.email) {
       fetchFavorites();
     }
   }, [session]);
-
-  // if (!session) return <div>Please log in to view your favorite memes.</div>;
 
   return (
     <main className="flex flex-col h-h-dvh">
@@ -34,48 +73,39 @@ export default function Favorite() {
       <div className="container mx-auto">
         <h3 className="text-3xl my-3">Your Favorite Memes</h3>
         <hr className="my-3" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {favorites.map((fav) => (
-            <div
-              key={fav._id}
-              className="relative w-full h-64 md:h-96 lg:h-[800px]"
-            >
-              <Image
-                src={fav.catImageUrl}
-                alt={`Meme with tag: ${fav.selectedTag}`}
-                fill
-                priority={true}
-                className="object-contain"
-              />
-              <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 w-full p-2 text-white">
-                <p>{fav.selectedTag}</p>
-                <p>{fav.message}</p>
-              </div>
-            </div>
-          ))}
+        <div className="grid grid-rows-*">
+          {favorites && favorites.length > 0 ? (
+            favorites.map((fav) => (
+              <Card
+                key={fav._id}
+                className="relative w-full h-100vh md:h-96 lg:h-[800px]"
+              >
+                <CardBody className="p-0">
+                  <Image
+                    src={fav.catImageUrl} // Ensure this is a valid public URL
+                    alt={`Meme with tag: ${fav.selectedTag || "No tag"}`}
+                    width="auto"
+                    height="auto"
+                    priority="true"
+                    objectfit="contain"
+                    className="rounded-xl w-auto h-auto max-w-full max-h-full"
+                  />
+                  <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 w-auto p-2 text-white rounded-xl">
+                    <input
+                      value={fav.title || ""}
+                      className="bg-transparent text-white font-bold w-full"
+                      onChange={(e) => changeTitleHandler(e, fav._id)}
+                    />
+                    <p>{fav.message || "No message"}</p>
+                  </div>
+                </CardBody>
+              </Card>
+            ))
+          ) : (
+            <p>No favorites available.</p>
+          )}
         </div>
       </div>
     </main>
-    // <main>
-    //   <Navbar session={session}/>
-    //   <h1 className="text-center text-2xl font-bold my-5">Favorite Cat Memes</h1>
-    //   {error && <p className="text-red-500">{error}</p>}
-    //   {favorites.length === 0 ? (
-    //     <p>No favorite memes yet!</p>
-    //   ) : (
-    //     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    //       {favorites.map((favorite) => (
-    //         <div key={favorite.memeId} className="border p-4 rounded-md">
-    //           <img src={`https://your-image-source.com/${favorite.memeId}`} alt={`Meme ${favorite.memeId}`} className="w-full h-auto" />
-    //           <button onClick={() => handleRemoveFavorite(favorite.memeId)} className="mt-2 bg-red-500 text-white p-2 rounded">
-    //             Remove from Favorites
-    //           </button>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   )}
-    //   <div></div>
-    //   <div></div>
-    // </main>
   );
 }
