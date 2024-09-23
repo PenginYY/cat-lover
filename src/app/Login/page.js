@@ -30,7 +30,7 @@ export default function Login() {
         setError("Invalid credentials");
         return;
       }
-    } catch(error) {
+    } catch (error) {
       console.log(error)
     }
   }
@@ -38,44 +38,54 @@ export default function Login() {
   return (
     <main>
       <Navbar />
-      <div className="container mx-auto py-5">
-        <h3>Login Page</h3>
-        <hr className="my-3" />
-        <form onSubmit={handleSubmit}>
+      <div className="container mx-auto mt-20 flex flex-col items-center">
+        <div className="w-full max-w-md">
+          <h3 className="text-2xl font-bold mb-4">Login Page</h3>
+          <hr className="my-3" />
+          <form onSubmit={handleSubmit} className="space-y-4">
 
-          {error && (
-            <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
-              {error}
+            {error && (
+              <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
+                {error}
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2" htmlFor="name">Name</label>
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full block bg-gray-200 p-2 my-2 rounded-md"
+                type="email"
+                placeholder="Enter your email"
+              />
             </div>
-          )}
 
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            className="block bg-gray-200 p-2 my-2 rounded-md"
-            type="email"
-            placeholder="Enter your email"
-          />
-          <input
-            onChange={(e) => setPassword(e.target.value)}
-            className="block bg-gray-200 p-2 my-2 rounded-md"
-            type="password"
-            placeholder="Enter your password"
-          />
-          <button
-            type="submit"
-            className="bg-green-500 p-2 rounded-md text-white"
-          >
-            Sign In
-          </button>
-        </form>
-        <hr className="my-3" />
-        <p>
-          Don&apos;t have an account? Go to{" "}
-          <Link className="text-blue-500 hover:underline" href={"/Register"}>
-            Register
-          </Link>{" "}
-          Page
-        </p>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2" htmlFor="email">Email</label>
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full block bg-gray-200 p-2 my-2 rounded-md"
+                type="password"
+                placeholder="Enter your password"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="bg-green-500 p-2 rounded-md text-white"
+            >
+              Sign In
+            </button>
+          </form>
+          <hr className="my-3" />
+          <p>
+            Don&apos;t have an account? Go to{" "}
+            <Link className="text-blue-500 hover:underline" href={"/Register"}>
+              Register
+            </Link>{" "}
+            Page
+          </p>
+        </div>
       </div>
     </main>
   );
