@@ -56,15 +56,6 @@ export default function CatSearch() {
     }
   };
 
-  const downloadHandler = async () => {
-    setDownload(true);
-
-    if (catImageUrl === "/img/default-image.png") {
-      alert("search first!");
-      setDownload(false);
-    }
-  };
-
   return (
     <main className="flex flex-col h-h-dvh">
       <Navbar session={session} />
@@ -78,37 +69,6 @@ export default function CatSearch() {
           priority={true}
           className="object-contain" // Changed from object-cover to object-contain
         />
-        <button
-          className="absolute text-black right-10 bottom-10"
-          onClick={downloadHandler}
-        >
-          {downloaded ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-arrow-down-circle-fill size-14"
-              viewBox="0 0 16 16"
-            >
-              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-arrow-down-circle size-14"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"
-              />
-            </svg>
-          )}
-        </button>
       </div>
 
       <div className="w-full flex justify-center items-center">
@@ -139,10 +99,10 @@ export default function CatSearch() {
         />
         <button
           onClick={searchHandle}
-          className="bg-black rounded text-white w-20 h-10"
+          className="bg-black rounded text-white w-40 h-10"
           type="submit"
         >
-          Search
+          Generate Meme
         </button>
       </div>
 
