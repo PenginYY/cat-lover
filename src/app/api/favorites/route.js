@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "../../../../lib/mongodb";
 import Favorite from "../../../../models/favorite";
@@ -79,7 +80,7 @@ export async function GET(req) {
   }
 }
 
-//not tested yet
+//Tested
 export async function PUT(req) {
   try {
     // Parse the request body
@@ -123,18 +124,40 @@ export async function PUT(req) {
 
 //not tested yet
 export async function DELETE(req) {
+  console.log(req);
   try {
     const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
+    const favId = searchParams.get("favId"); // Get the favorite ID from the query parameters
+    console.log("Favorite ID to delete:", favId);
+
+    // Ensure favId is provided
+    if (!favId) {
+      return NextResponse.json(
+        { message: "favId parameter is required." },
+        { status: 400 }
+      );
+    }
 
     await connectMongoDB();
-    const favoritesDel = await Favorite.collection("favorites").deleteOne({});
 
-    return NextResponse.json({ favoritesDel });
+    // Use favId to delete the specific favorite
+    const result = await Favorite.collection("favorites").findOneAndDelete({
+      _id: ObjectId(favId), // Ensure favId is an ObjectId
+    });
+
+    // Check if a document was deleted
+    if (!result) {
+      return NextResponse.json(
+        { message: "No favorite found with the given ID." },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ message: "Favorite deleted successfully." });
   } catch (error) {
-    console.error("Error deleting favorites:", error);
+    console.error("Error deleting favorite:", error);
     return NextResponse.json(
-      { message: "Failed to delete favorites." },
+      { message: "Failed to delete favorite." },
       { status: 500 }
     );
   }

@@ -10,7 +10,6 @@ import { useSession } from "next-auth/react";
 export default function CatSearch() {
   const { data: session } = useSession();
 
-  const [downloaded, setDownload] = useState(false);
   const [message, setMessage] = useState("");
   const [fontColor, setFontColor] = useState("#00FF00"); // default green color
   const [fontSize, setFontSize] = useState(25); // default font size
@@ -28,7 +27,6 @@ export default function CatSearch() {
   };
 
   const searchHandle = async () => {
-    setDownload(false);
     if (!message) {
       setError("Please enter a message!");
       return;
