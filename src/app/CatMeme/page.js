@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 export default function CatSearch() {
   const { data: session } = useSession();
 
-  const [favorited, setFavorite] = useState(false);
+  const [downloaded, setDownload] = useState(false);
   const [message, setMessage] = useState("");
   const [fontColor, setFontColor] = useState("#00FF00"); // default green color
   const [fontSize, setFontSize] = useState(25); // default font size
@@ -28,7 +28,7 @@ export default function CatSearch() {
   };
 
   const searchHandle = async () => {
-    setFavorite(false);
+    setDownload(false);
     if (!message) {
       setError("Please enter a message!");
       return;
@@ -56,44 +56,12 @@ export default function CatSearch() {
     }
   };
 
-  const favoriteHandler = async () => {
-    setFavorite(true);
-    const title = "Untitled";
-    const selectedTag = null;
-    if (!favorited && catImageUrl !== "/img/default-image.png") {
-      // console.log("Preparing to send data:", {
-      //   userEmail: session.user.email,
-      //   title,
-      //   selectedTag,
-      //   message,
-      //   catImageUrl,
-      // });
-      try {
-        const response = await fetch("/api/favorites", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userEmail: session.user.email,
-            title,
-            selectedTag,
-            message,
-            catImageUrl,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
-
-        alert("Added to favorites!");
-      } catch (error) {
-        console.error("Failed to add favorite", error);
-      }
-    }
+  const downloadHandler = async () => {
+    setDownload(true);
 
     if (catImageUrl === "/img/default-image.png") {
       alert("search first!");
-      setFavorite(false);
+      setDownload(false);
     }
   };
 
@@ -112,21 +80,18 @@ export default function CatSearch() {
         />
         <button
           className="absolute text-black right-10 bottom-10"
-          onClick={favoriteHandler}
+          onClick={downloadHandler}
         >
-          {favorited ? (
+          {downloaded ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
               fill="currentColor"
-              className="bi bi-heart-fill size-10"
+              className="bi bi-arrow-down-circle-fill size-14"
               viewBox="0 0 16 16"
             >
-              <path
-                fillRule="evenodd"
-                d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-              />
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z" />
             </svg>
           ) : (
             <svg
@@ -134,10 +99,13 @@ export default function CatSearch() {
               width="16"
               height="16"
               fill="currentColor"
-              className="bi bi-heart size-10"
+              className="bi bi-arrow-down-circle size-14"
               viewBox="0 0 16 16"
             >
-              <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+              <path
+                fill-rule="evenodd"
+                d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"
+              />
             </svg>
           )}
         </button>
