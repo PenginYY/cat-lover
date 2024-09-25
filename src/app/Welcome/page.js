@@ -4,19 +4,19 @@ import React, { useState, useEffect } from 'react'
 import Image from "next/image";
 import Navbar from '../components/Navbar'
 import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
 
 export default function Welcome() {
     const { data: session } = useSession();
 
-    const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
+    const [catImageUrl, setCatImageUrl] = useState("/img/bb692186-c423-4dc8-aca9-51ca6b1d96c7.gif");
 
     useEffect(() => {
         showCatHandle();
     }, [])
 
     const showCatHandle = async () => {
-        const apiUrl = `https://cataas.com/cat/gif/says/Welcome?filter=mono&fontColor=green&fontSize=40&type=square`;
+        const apiUrl = `https://cataas.com/cat/gif/says/Welcome?fontColor=green&fontSize=40&type=square`;
+        //const apiUrl = `https://cataas.com/cat/gif/says/Welcome?filter=mono&fontColor=green&fontSize=40&type=square`;
 
         try {
             const response = await fetch(apiUrl);
@@ -72,7 +72,7 @@ export default function Welcome() {
                             alt="Generated cat meme"
                             fill
                             priority={true}
-                            className="object-contain" // Changed from object-cover to object-contain
+                            className="object-contain"
                         />
                     </div>
 
