@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { connectMongoDB } from "../../../../lib/mongodb";
-import User from "../../../../models/user";
+import { connectMongoDB } from "../../../../../lib/mongodb";
+import User from "../../../../../models/user";
+import Favorite from "../../../../../models/favorite";
 import bcrypt from "bcryptjs"
 
 export async function PATCH(req) {
@@ -36,9 +37,10 @@ export async function DELETE(req) {
         }
 
         await User.findOneAndDelete({ email });
+        await Favorite.deleteMany({ userEmail: email })
+
         return NextResponse.json({ message: "User profile deleted successfully" }, { status: 200 });
     } catch (error) {
-        console.error("Error updating user:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }
