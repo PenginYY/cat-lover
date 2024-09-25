@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { signIn, signOut } from "next-auth/react"
 import Navbar from "../components/Navbar";
-import bcrypt from "bcryptjs"
 
 export default function Profile() {
     const { data: session } = useSession();
@@ -34,18 +33,28 @@ export default function Profile() {
         setError("");
         setSuccess("");
 
-        if (password !== confirmPassword) {
-            setError("Passwords do not match!");
-            return;
-        }
-
         try {
+
+            const resCheckPassword = await fetch("api/users/checkPassword", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: session.user.email, password: confirmPassword }),
+            });
+
+            const checkPasswordResult = await resCheckPassword.json();
+            if (!resCheckPassword.ok) {
+                setError(checkPasswordResult.message || "Invalid password");
+                return;
+            }
+
             const body = {};
             if (name) body.name = name;
             if (email) body.email = email;
             if (password) body.password = password;
 
-            const res = await fetch("api/users/profile", {
+            const resUpdate = await fetch("api/users/profile", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -53,12 +62,27 @@ export default function Profile() {
                 body: JSON.stringify(body),
             });
 
-            const result = await res.json();
-            if (res.ok) {
+            const result = await resUpdate.json();
+            if (resUpdate.ok) {
                 setSuccess(result.message || "Profile updated successfully");
+
+                // Update the state with the new values
+                if (name) setName(name);
+                if (email) setEmail(email);
+                if (password) setPassword("");
+                setConfirmPassword("");
+
+                // Update the session
+                await signIn("credentials", {
+                    redirect: false,
+                    email: email || session.user.email,
+                    password: password || "",
+                });
+
             } else {
                 setError(result.message || "Failed to update profile");
             }
+
         } catch (error) {
             setError("An error occurred while updating the profile");
         }
@@ -72,12 +96,21 @@ export default function Profile() {
         setError("");
         setSuccess("");
 
-        if (password !== confirmPassword) {
-            setError("Passwords do not match!");
+        const resCheckPassword = await fetch("api/users/checkPassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: session.user.email, password: confirmPassword }),
+        });
+
+        const checkPasswordResult = await resCheckPassword.json();
+        if (!resCheckPassword.ok) {
+            setError(checkPasswordResult.message || "Invalid password");
             return;
         }
 
-        const res = await fetch("api/users/profile", {
+        const resDelete = await fetch("api/users/profile", {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -85,8 +118,8 @@ export default function Profile() {
             body: JSON.stringify({ email, password }),
         });
 
-        const result = await res.json();
-        if (res.ok) {
+        const result = await resDelete.json();
+        if (resDelete.ok) {
             console.log(result.message);
             setSuccess(result.message || "Profile deleted successfully.");
             signOut({ callbackUrl: '/' });
