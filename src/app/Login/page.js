@@ -51,7 +51,7 @@ export default function Login() {
             )}
 
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="name">Name</label>
+              <label className="block text-gray-700 mb-2" htmlFor="name">Email</label>
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full block bg-gray-200 p-2 my-2 rounded-md"
@@ -61,7 +61,7 @@ export default function Login() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="email">Email</label>
+              <label className="block text-gray-700 mb-2" htmlFor="email">password</label>
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full block bg-gray-200 p-2 my-2 rounded-md"
@@ -72,7 +72,7 @@ export default function Login() {
 
             <button
               type="submit"
-              className="bg-green-500 p-2 rounded-md text-white"
+              className="bg-green-500 py-2 px-7 rounded-md text-white"
             >
               Sign In
             </button>

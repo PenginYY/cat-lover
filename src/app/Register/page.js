@@ -31,7 +31,7 @@ export default function Register() {
     }
 
     try {
-      const resCheckUser = await fetch("/api/checkUser", {
+      const resCheckUser = await fetch("api/users/checkUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export default function Register() {
       }
 
       // Register user
-      const resRegister = await fetch("/api/register", {
+      const resRegister = await fetch("api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -90,7 +90,7 @@ export default function Register() {
               <label className="block text-gray-700 mb-2" htmlFor="name">Name</label>
               <input
                 onChange={(e) => setName(e.target.value)}
-                className="block bg-gray-200 p-2 my-2 rounded-md"
+                className="w-full block bg-gray-200 p-2 my-2 rounded-md"
                 type="text"
                 placeholder="Enter your name"
               />
@@ -100,7 +100,7 @@ export default function Register() {
               <label className="block text-gray-700 mb-2" htmlFor="name">Email</label>
               <input
                 onChange={(e) => setEmail(e.target.value)}
-                className="block bg-gray-200 p-2 my-2 rounded-md"
+                className="w-full block bg-gray-200 p-2 my-2 rounded-md"
                 type="email"
                 placeholder="Enter your email"
               />
@@ -110,7 +110,7 @@ export default function Register() {
               <label className="block text-gray-700 mb-2" htmlFor="name">Password</label>
               <input
                 onChange={(e) => setPassword(e.target.value)}
-                className="block bg-gray-200 p-2 my-2 rounded-md"
+                className="w-full block bg-gray-200 p-2 my-2 rounded-md"
                 type="password"
                 placeholder="Enter your password"
               />
@@ -120,7 +120,7 @@ export default function Register() {
               <label className="block text-gray-700 mb-2" htmlFor="name">Confirm Password</label>
               <input
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="block bg-gray-200 p-2 my-2 rounded-md"
+                className="w-full block bg-gray-200 p-2 my-2 rounded-md"
                 type="password"
                 placeholder="Confirm your password"
               />
@@ -128,7 +128,7 @@ export default function Register() {
 
             <button
               type="submit"
-              className="bg-green-500 p-2 rounded-md text-white"
+              className="bg-green-500 py-2 px-7 rounded-md text-white"
             >
               Sign Up
             </button>

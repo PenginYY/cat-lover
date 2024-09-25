@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { signIn } from "next-auth/react"
-import { signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react"
 import Navbar from "../components/Navbar";
 
 export default function Profile() {
@@ -12,11 +11,12 @@ export default function Profile() {
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState(""); // Optional password change
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const [action, setAction] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-    //const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-    //const [deletePassword, setDeletePassword] = useState(""); // State for password input
 
     useEffect(() => {
         if (!session) {
@@ -34,13 +34,18 @@ export default function Profile() {
         setError("");
         setSuccess("");
 
+        if (password != confirmPassword) {
+            setError("Passwords do not match!");
+            return;
+        }
+
         try {
             const body = {};
             if (name) body.name = name;
             if (email) body.email = email;
             if (password) body.password = password;
 
-            const res = await fetch("/api/profile", {
+            const res = await fetch("api/users/profile", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -60,32 +65,48 @@ export default function Profile() {
         }
     };
 
-    const handleDelete = async () => {
-        if (!password) {
-            setError("Please enter your password to delete your profile.");
-            return;
-        }
-        if (confirm("Are you sure you want to delete your profile? This action cannot be undone.")) {
-            const res = await fetch("/api/profile", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
+    const handleDelete = async (e) => {
+        e.preventDefault();
 
-            const result = await res.json();
-            if (res.ok) {
-                console.log(result.message);
-                setSuccess(result.message || "Profile deleted successfully.");
-                signOut({ callbackUrl: '/' });
-            } else {
-                setError(result.message || "Failed to delete profile.");
-            }
+        setError("");
+        setSuccess("");
+
+        const res = await fetch("api/users/profile", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+            console.log(result.message);
+            setSuccess(result.message || "Profile deleted successfully.");
+            signOut({ callbackUrl: '/' });
+        } else {
+            setError(result.message || "Failed to delete profile.");
         }
     };
 
+    const openModal = (actionType) => {
+        setAction(actionType); // Set the action type (update or delete)
+        setShowModal(true);
+    };
 
+    const closeModal = () => {
+        setShowModal(false);
+        setConfirmPassword(""); // Clear password on close
+    };
+
+    const handleConfirm = (e) => {
+        if (action === "delete") {
+            handleDelete(e);
+        } else if (action === "update") {
+            handleUpdate(e);
+        }
+        closeModal(); // Close modal after handling
+    };
 
     return (
         <main>
@@ -137,96 +158,65 @@ export default function Profile() {
 
                         <div className="flex">
                             <button
-                                type="submit"
+                                type="button"
+                                onClick={() => openModal("update")}
                                 className="w-[50%] bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
                             >
                                 Update Profile
                             </button>
 
                             <button
-                                onClick={handleDelete}
+                                type="button"
+                                onClick={() => openModal("delete")}
                                 className="mx-3 w-[50%] bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
                             >
                                 Delete Profile
                             </button>
                         </div>
                     </form>
-
                 </div>
             </div>
+
+            {/* Modal */}
+            {showModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                        <h3 className="text-xl font-bold mb-4">
+                            {action === "delete" ? "Confirm Profile Deletion" : "Confirm Profile Update"}
+                        </h3>
+                        <p className="mb-4">
+                            {action === "delete"
+                                ? "Please enter your password to confirm profile deletion."
+                                : "Please enter your password to confirm profile update."}
+                        </p>
+
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="w-full block bg-gray-200 p-2 my-2 rounded-md"
+                            placeholder="Enter your password"
+                        />
+
+                        <div className="flex justify-between mt-4">
+                            <button
+                                onClick={handleConfirm}
+                                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                            >
+                                Confirm {action.charAt(0).toUpperCase() + action.slice(1)}
+                            </button>
+                            <button
+                                onClick={closeModal}
+                                className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-700"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </main>
     );
 }
 
-
-// const openDeleteModal = () => {
-//     setIsModalOpen(true);
-// };
-
-// const handleDelete = async () => {
-//     const hashedDeletePassword = await bcrypt.hash(deletePassword, 10);
-//     const isMatch = await bcrypt.compare(hashedDeletePassword, password);
-
-//     if (!isMatch) {
-//         setError("Passwords do not match. Please try again.");
-//         return;
-//     } else {
-//         const res = await fetch("/api/profile", {
-//             method: "DELETE",
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//             body: JSON.stringify({ email: email, password: password }),
-//         });
-
-//         const result = await res.json();
-//         if (res.ok) {
-//             console.log(result.message);
-//             setSuccess(result.message || "Profile deleted successfully.");
-//             redirect("/");
-//         } else {
-//             setError(result.message || "Failed to delete profile.");
-//         }
-//     }
-// };
-
-// {/* <button
-//                     onClick={openDeleteModal}
-//                     className="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
-//                 >
-//                     Delete Profile
-//                 </button> */}
-
-//             {/* Modal for password confirmation */}
-//             {/* {isModalOpen && (
-//                     <div className="fixed inset-0 flex items-center justify-center z-50">
-//                         <div className="bg-white p-6 rounded shadow-md">
-//                             <h4 className="text-lg font-bold mb-4">Confirm Deletion</h4>
-//                             <p>Enter your password to confirm deletion:</p>
-//                             <input
-//                                 type="password"
-//                                 value={deletePassword}
-//                                 onChange={(e) => setDeletePassword(e.target.value)}
-//                                 className="w-full p-2 border rounded mb-4"
-//                                 placeholder="Enter your password"
-//                             />
-//                             <div className="flex justify-end">
-//                                 <button
-//                                     onClick={handleDelete}
-//                                     className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 mr-2"
-//                                 >
-//                                     Delete
-//                                 </button>
-//                                 <button
-//                                     onClick={() => {
-//                                         setIsModalOpen(false);
-//                                         setDeletePassword(""); // Clear password input
-//                                     }}
-//                                     className="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400"
-//                                 >
-//                                     Cancel
-//                                 </button>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 )} */}
