@@ -7,8 +7,15 @@ import bcrypt from "bcryptjs"
 export async function PATCH(req) {
     try {
         await connectMongoDB();
-        const { name, email, password } = await req.json();
-        const user = await User.findOne({ email }).select("id");
+        const { name, email, password, confirmPassword } = await req.json();
+        const user = await User.findOne({ email }).select("id name email password");
+
+        if (confirmPassword) {
+            const isPasswordValid = await bcrypt.compare(confirmPassword, user.password);
+            if (!isPasswordValid) {
+                return NextResponse.json({ message: "Invalid current password" }, { status: 401 });
+            }
+        }
 
         if (name) user.name = name;
         if (email) user.email = email;

@@ -34,27 +34,13 @@ export default function Profile() {
         setSuccess("");
 
         try {
-
-            const resCheckPassword = await fetch("api/users/checkPassword", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email: session.user.email, password: confirmPassword }),
-            });
-
-            const checkPasswordResult = await resCheckPassword.json();
-            if (!resCheckPassword.ok) {
-                setError(checkPasswordResult.message || "Invalid password");
-                return;
-            }
-
             const body = {};
             if (name) body.name = name;
             if (email) body.email = email;
             if (password) body.password = password;
+            body.confirmPassword = confirmPassword;
 
-            const resUpdate = await fetch("api/users/profile", {
+            const res = await fetch("api/users/profile", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -62,8 +48,8 @@ export default function Profile() {
                 body: JSON.stringify(body),
             });
 
-            const result = await resUpdate.json();
-            if (resUpdate.ok) {
+            const result = await res.json();
+            if (res.ok) {
                 setSuccess(result.message || "Profile updated successfully");
 
                 // Update the state with the new values
@@ -96,35 +82,26 @@ export default function Profile() {
         setError("");
         setSuccess("");
 
-        const resCheckPassword = await fetch("api/users/checkPassword", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: session.user.email, password: confirmPassword }),
-        });
+        try {
+            const res = await fetch("api/users/profile", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password: confirmPassword }), // Send 'confirmPassword' as 'password'
+            });
 
-        const checkPasswordResult = await resCheckPassword.json();
-        if (!resCheckPassword.ok) {
-            setError(checkPasswordResult.message || "Invalid password");
-            return;
-        }
+            const result = await res.json();
 
-        const resDelete = await fetch("api/users/profile", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
-
-        const result = await resDelete.json();
-        if (resDelete.ok) {
-            console.log(result.message);
-            setSuccess(result.message || "Profile deleted successfully.");
-            signOut({ callbackUrl: '/' });
-        } else {
-            setError(result.message || "Failed to delete profile.");
+            if (res.ok) {
+                console.log(result.message);
+                setSuccess(result.message || "Profile deleted successfully.");
+                signOut({ callbackUrl: '/' });
+            } else {
+                setError(result.message || "Failed to delete profile.");
+            }
+        } catch (error) {
+            setError("An error occurred while deleting the profile.");
         }
     };
 
