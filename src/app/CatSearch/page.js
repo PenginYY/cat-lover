@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Navbar from "../components/Navbar";
 import { useSession } from "next-auth/react";
+import keyword from "../../../data/keywords.json";
 
 export default function MemeCreator() {
   const { data: session } = useSession();
@@ -10,9 +11,9 @@ export default function MemeCreator() {
   const [favorited, setFavorite] = useState(false);
   const [selectedTag, setSelectedTag] = useState("");
   const [message, setMessage] = useState("");
-  // default image
   const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
   const [error, setError] = useState("");
+  const [keywords, setKeywords] = useState([]);
 
   const colors = [
     "bg-red-500",
@@ -24,76 +25,48 @@ export default function MemeCreator() {
     "bg-purple-500",
   ];
 
-  // Handle checkbox changes
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-
     if (checked) {
       if (selectedTag) {
-        // If there's already a selected tag, show error
         setError("Choose only 1 keyword!");
       } else {
-        // Set the selected tag
         setSelectedTag(name);
-        setMessage(name); // Update the message with the selected tag
-        setError(""); // Clear any previous error
+        setMessage(name);
+        setError("");
       }
-    } else {
-      // Checkbox was unchecked
-      if (selectedTag === name) {
-        setSelectedTag(""); // Clear the selected tag
-        setMessage(""); // Clear the message
-        setError(""); // Clear any previous error
-      }
+    } else if (selectedTag === name) {
+      setSelectedTag("");
+      setMessage("");
+      setError("");
     }
   };
 
   const searchHandle = async () => {
-    // Build the API URL using user inputs
+    setFavorite(false);
     const encodedMessage = encodeURIComponent(message);
-    console.log(encodedMessage);
 
     const apiUrl = `https://cataas.com/cat/${encodedMessage}?position=center`;
 
     try {
       const response = await fetch(apiUrl);
-      const blob = await response.blob();
-      const imageUrl = URL.createObjectURL(blob); // Convert blob to URL
-      setCatImageUrl(imageUrl); // Update the image state
+      if (response.ok) {
+        const imageUrl = response.url;
+        setCatImageUrl(imageUrl);
+      }
     } catch (error) {
       console.error("Error fetching the cat meme:", error);
     }
   };
 
-  // List of dropdown keywords
-  const keywords = [
-    { name: "Angry" },
-    { name: "Baby" },
-    { name: "Bed" },
-    { name: "Catto" },
-    { name: "Evil" },
-    { name: "Fluffy" },
-    { name: "Grumpy" },
-  ];
-
-  // console.log(searchName);
-  // Filtered keywords based on the search term
   const filteredKeywords = keywords.filter((item) =>
-    item.name.toLowerCase().includes(message.toLowerCase())
+    item.toLowerCase().includes(message.toLowerCase())
   );
-  // console.log(filteredKeywords);
 
-  // Add to favorite
   const favoriteHandler = async () => {
+    setFavorite(true);
     const title = "Untitled";
     if (!favorited && catImageUrl !== "/img/default-image.png") {
-      // console.log("Preparing to send data:", {
-      //   userEmail: session.user.email,
-      //   title,
-      //   selectedTag,
-      //   message,
-      //   catImageUrl,
-      // });
       try {
         const response = await fetch("/api/favorites", {
           method: "POST",
@@ -112,7 +85,6 @@ export default function MemeCreator() {
         }
 
         alert("Added to favorites!");
-        setFavorite(true);
       } catch (error) {
         console.error("Failed to add favorite", error);
       }
@@ -124,17 +96,20 @@ export default function MemeCreator() {
     }
   };
 
+  useEffect(() => {
+    setKeywords(keyword);
+  }, []);
+
   return (
-    <main className="flex flex-col h-h-dvh">
+    <main className="flex flex-col h-h-dvh ">
       <Navbar session={session} />
-      {/* Display the cat image */}
       <div className="relative w-full h-64 md:h-96 lg:h-[800px]">
         <Image
           src={catImageUrl}
           alt="Generated cat meme"
           fill
           priority={true}
-          className="object-contain" // Changed from object-cover to object-contain
+          className="object-contain"
         />
 
         <button
@@ -151,7 +126,7 @@ export default function MemeCreator() {
               viewBox="0 0 16 16"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
               />
             </svg>
@@ -177,7 +152,7 @@ export default function MemeCreator() {
           </div>
         )}
       </div>
-      {/* Input form */}
+
       <div className="flex justify-center items-center space-x-4 mt-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +169,8 @@ export default function MemeCreator() {
           type="text"
           placeholder="Search by keyword"
           maxLength="20"
-          onChange={handleCheckboxChange}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)} // Update message directly
         />
         <button
           onClick={searchHandle}
@@ -205,25 +181,25 @@ export default function MemeCreator() {
         </button>
       </div>
 
-      <div className="flex justify-center items-center w-full h-fit">
-        <div className="flex justify-center items-center bg-zinc-200 w-fit h-fit mr-11 rounded py-5">
-          {filteredKeywords.map((item, index) => (
-            <div
-              key={item.name}
-              className={`${
-                colors[index % colors.length]
-              } text-black rounded mx-5 p-2`}
-            >
-              <input
-                type="checkbox"
-                className="inline-block text-center"
-                name={item.name}
-                id={item.name}
-                onChange={handleCheckboxChange}
-              />
-              <label htmlFor={item.name}>{item.name}</label>
-            </div>
-          ))}
+      <div className="flex justify-center items-center">
+        <div className="flex w-fit h-fit">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 bg-zinc-200 justify-center items-center w-full h-fit mr-11 rounded py-5">
+            {filteredKeywords.map((item, index) => (
+              <div
+                key={item}
+                className={`bg-sky-950 text-gray-100 rounded mx-2 p-2 text-center`}
+              >
+                <input
+                  type="checkbox"
+                  className="inline-block text-center mx-1"
+                  name={item}
+                  id={item}
+                  onChange={handleCheckboxChange}
+                />
+                <label htmlFor={item}>{item}</label>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </main>

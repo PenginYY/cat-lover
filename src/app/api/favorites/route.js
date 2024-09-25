@@ -47,20 +47,75 @@ export async function POST(req) {
   }
 }
 
-//not tested yet
+//Tested
 export async function GET(req) {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
-
+    // Connect to MongoDB
     await connectMongoDB();
-    const favorites = await Favorite.find({ userId });
 
+    // Get the URL search params to extract the userEmail query param
+    const { searchParams } = new URL(req.url);
+    const userEmail = searchParams.get("userEmail");
+
+    // Check if userEmail is provided
+    if (!userEmail) {
+      return NextResponse.json(
+        { message: "User email is required" },
+        { status: 400 } // Bad request
+      );
+    }
+
+    // Fetch the user's favorites based on their email
+    const favorites = await Favorite.find({ userEmail: userEmail });
+
+    // Return the favorites array in the response
     return NextResponse.json({ favorites });
   } catch (error) {
     console.error("Error fetching favorites:", error);
     return NextResponse.json(
-      { message: "Failed to fetch favorites." },
+      { message: "Internal Server Error" },
+      { status: 500 } // Internal Server Error
+    );
+  }
+}
+
+//not tested yet
+export async function PUT(req) {
+  try {
+    // Parse the request body
+    const body = await req.json();
+    const { favId, title } = body; // Extract the favorite ID and the new title
+    console.log(favId, title);
+
+    if (!favId || !title) {
+      return NextResponse.json(
+        { message: "Favorite ID and title are required." },
+        { status: 400 }
+      );
+    }
+
+    // Connect to MongoDB
+    await connectMongoDB();
+
+    // Find the favorite by ID and update the title
+    const result = await Favorite.updateOne(
+      { _id: favId }, // Filter by favorite ID
+      { $set: { title: title } } // Update the title field
+    );
+
+    if (result.modifiedCount === 0) {
+      return NextResponse.json(
+        { message: "Favorite not found or title not updated." },
+        { status: 404 }
+      );
+    }
+
+    // Respond with the updated favorite
+    return NextResponse.json({ message: "Title updated successfully." });
+  } catch (error) {
+    console.error("Error updating favorite:", error);
+    return NextResponse.json(
+      { message: "Failed to update favorite." },
       { status: 500 }
     );
   }

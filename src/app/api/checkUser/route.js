@@ -8,9 +8,11 @@ export async function POST(req) {
         const { email } = await req.json();
         const user = await User.findOne({ email }).select("_id");
 
-        return NextResponse.json({ user });
-        
-    } catch(error) {
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
-    }
+    return NextResponse.json({ user });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
