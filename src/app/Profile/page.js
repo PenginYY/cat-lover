@@ -7,7 +7,7 @@ import { signIn, signOut } from "next-auth/react"
 import Navbar from "../components/Navbar";
 
 export default function Profile() {
-    const { data: session } = useSession();
+  const { data: session } = useSession();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -18,21 +18,26 @@ export default function Profile() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    useEffect(() => {
-        if (!session) {
-            redirect("/Welcome");
-        } else if (session) {
-            setName(session.user.name);
-            setEmail(session.user.email);
-        }
-    }, [session]);
+  useEffect(() => {
+    if (!session) {
+      redirect("/Welcome");
+    } else if (session) {
+      setName(session.user.name);
+      setEmail(session.user.email);
+    }
+  }, [session]);
 
+  const handleUpdate = async (e) => {
+    e.preventDefault();
 
-    const handleUpdate = async (e) => {
-        e.preventDefault();
+    setError("");
+    setSuccess("");
 
-        setError("");
-        setSuccess("");
+    try {
+      const body = {};
+      if (name) body.name = name;
+      if (email) body.email = email;
+      if (password) body.password = password;
 
         if (password != confirmPassword) {
             setError("Passwords do not match!");
@@ -53,17 +58,23 @@ export default function Profile() {
                 body: JSON.stringify(body),
             });
 
-            const result = await res.json();
-            if (res.ok) {
-                setSuccess(result.message || "Profile updated successfully");
-                await signIn("Credentials", { email, password, redirect: false });
-            } else {
-                setError(result.message || "Failed to update profile");
-            }
-        } catch (error) {
-            setError("An error occurred while updating the profile");
-        }
-    };
+  const handleDelete = async () => {
+    if (!password) {
+      setError("Please enter your password to delete your profile.");
+      return;
+    }
+    if (
+      confirm(
+        "Are you sure you want to delete your profile? This action cannot be undo."
+      )
+    ) {
+      const res = await fetch("/api/profile", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
     const handleDelete = async (e) => {
         e.preventDefault();
