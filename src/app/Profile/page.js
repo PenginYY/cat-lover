@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { signIn, signOut } from "next-auth/react"
 import Navbar from "../components/Navbar";
-import bcrypt from "bcryptjs"
 
 export default function Profile() {
     const { data: session } = useSession();
@@ -34,16 +33,12 @@ export default function Profile() {
         setError("");
         setSuccess("");
 
-        if (password !== confirmPassword) {
-            setError("Passwords do not match!");
-            return;
-        }
-
         try {
             const body = {};
             if (name) body.name = name;
             if (email) body.email = email;
             if (password) body.password = password;
+            body.confirmPassword = confirmPassword;
 
             const res = await fetch("api/users/profile", {
                 method: "PATCH",
@@ -56,9 +51,24 @@ export default function Profile() {
             const result = await res.json();
             if (res.ok) {
                 setSuccess(result.message || "Profile updated successfully");
+
+                // Update the state with the new values
+                if (name) setName(name);
+                if (email) setEmail(email);
+                if (password) setPassword("");
+                setConfirmPassword("");
+
+                // Update the session
+                await signIn("credentials", {
+                    redirect: false,
+                    email: email || session.user.email,
+                    password: password || "",
+                });
+
             } else {
                 setError(result.message || "Failed to update profile");
             }
+
         } catch (error) {
             setError("An error occurred while updating the profile");
         }
@@ -72,26 +82,26 @@ export default function Profile() {
         setError("");
         setSuccess("");
 
-        if (password !== confirmPassword) {
-            setError("Passwords do not match!");
-            return;
-        }
+        try {
+            const res = await fetch("api/users/profile", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password: confirmPassword }), // Send 'confirmPassword' as 'password'
+            });
 
-        const res = await fetch("api/users/profile", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
+            const result = await res.json();
 
-        const result = await res.json();
-        if (res.ok) {
-            console.log(result.message);
-            setSuccess(result.message || "Profile deleted successfully.");
-            signOut({ callbackUrl: '/' });
-        } else {
-            setError(result.message || "Failed to delete profile.");
+            if (res.ok) {
+                console.log(result.message);
+                setSuccess(result.message || "Profile deleted successfully.");
+                signOut({ callbackUrl: '/' });
+            } else {
+                setError(result.message || "Failed to delete profile.");
+            }
+        } catch (error) {
+            setError("An error occurred while deleting the profile.");
         }
     };
 
