@@ -1,7 +1,7 @@
 export default function Statistics() {
   return (
     <main>
-      <h1>Statistics page</h1>
+      <h1>history page</h1>
     </main>
   );
 }
