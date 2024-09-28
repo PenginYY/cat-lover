@@ -18,12 +18,42 @@ export default function Profile() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
+    // useEffect(() => {
+    //     if (!session) {
+    //         redirect("/Welcome");
+    //     } else if (session) {
+    //         setName(session.user.name);
+    //         setEmail(session.user.email);
+    //     }
+    // }, [session]);
+
     useEffect(() => {
         if (!session) {
             redirect("/Welcome");
-        } else if (session) {
-            setName(session.user.name);
-            setEmail(session.user.email);
+        } else {
+            const fetchProfileData = async () => {
+                try {
+                    const res = await fetch(`api/users/profile?email=${session.user.email}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    const result = await res.json();
+                    console.log("result: ",result)
+
+                    if (res.ok) {
+                        setName(result.user.name);
+                        console.log("result.name: ", result.name)
+                        setEmail(result.user.email);
+                    } else {
+                        setError(result.message || "Failed to load profile");
+                    }
+                } catch (error) {
+                    setError("An error occurred while loading the profile");
+                }
+            };
+            fetchProfileData();
         }
     }, [session]);
 
