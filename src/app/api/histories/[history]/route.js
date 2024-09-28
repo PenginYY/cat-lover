@@ -1,21 +1,17 @@
 import { connectMongoDB } from "../../../../../lib/mongodb";
-import User from "../../../../../models/user";
-import History from "../../../../../models/history";
 import { NextResponse } from "next/server";
 import { Types } from "mongoose";
+import History from "../../../../../models/history";
 
 export const PATCH = async (request, context) => {
     const historyId = context.params.history;
     try {
         const body = await request.json();
-        const { catId, text, fontSize, fontColor } = body;
+        const { catId, text, fontSize, fontColor, userEmail } = body;
 
-        const { searchParams } = new URL(request.url);
-        const userId = searchParams.get("userId");
-
-        if (!userId || !Types.ObjectId.isValid(userId)) {
+        if (!userEmail) {
             return new NextResponse(
-                JSON.stringify({ message: "Invalid user ID" }),
+                JSON.stringify({ message: "User email is required" }),
                 { status: 400 }
             );
         }
@@ -29,16 +25,7 @@ export const PATCH = async (request, context) => {
 
         await connectMongoDB();
 
-        const user = await User.findById(userId);
-
-        if (!user) {
-            return new NextResponse(
-                JSON.stringify({ message: "User not found" }),
-                { status: 404 }
-            );
-        }
-
-        const history = await History.findOne({ _id: historyId, user: userId });
+        const history = await History.findOne({ _id: historyId });
 
         if (!history) {
             return new NextResponse(
@@ -49,7 +36,7 @@ export const PATCH = async (request, context) => {
 
         const updatedHistory = await History.findByIdAndUpdate(
             historyId,
-            { catId, text, fontSize, fontColor },
+            { catId, text, fontSize, fontColor, userEmail },
             { new: true }
         );
 
@@ -68,16 +55,6 @@ export const PATCH = async (request, context) => {
 export const DELETE = async (request, context) => {
     const historyId = context.params.history;
     try {
-        const { searchParams } = new URL(request.url);
-        const userId = searchParams.get("userId");
-
-        if (!userId || !Types.ObjectId.isValid(userId)) {
-            return new NextResponse(
-                JSON.stringify({ message: "Invalid user ID" }),
-                { status: 400 }
-            );
-        }
-
         if (!historyId || !Types.ObjectId.isValid(historyId)) {
             return new NextResponse(
                 JSON.stringify({ message: "Invalid history ID" }),
@@ -87,16 +64,7 @@ export const DELETE = async (request, context) => {
 
         await connectMongoDB();
 
-        const user = await User.findById(userId);
-
-        if (!user) {
-            return new NextResponse(
-                JSON.stringify({ message: "User not found" }),
-                { status: 404 }
-            );
-        }
-
-        const history = await History.findOne({ _id: historyId, user: userId });
+        const history = await History.findOne({ _id: historyId });
 
         if (!history) {
             return new NextResponse(

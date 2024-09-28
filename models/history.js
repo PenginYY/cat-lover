@@ -1,4 +1,4 @@
-import {Schema, model, models} from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 const HistorySchema = new Schema(
     {
@@ -18,10 +18,9 @@ const HistorySchema = new Schema(
             type: String,
             required: true
         },
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-            required: true
+        userEmail: {
+            type: String,
+            required: true,
         }
     },
     {

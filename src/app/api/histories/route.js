@@ -1,35 +1,22 @@
 import { connectMongoDB } from "../../../../lib/mongodb";
-import User from "../../../../models/user";
-import History from "../../../../models/history";
 import { NextResponse } from "next/server";
-import { Types } from "mongoose";
+import History from "../../../../models/history";
 
 export const GET = async (request) => {
     try {
         const { searchParams } = new URL(request.url);
-        const userId = searchParams.get("userId");
+        const userEmail = searchParams.get("userEmail");
 
-        if (!userId || !Types.ObjectId.isValid(userId)) {
+        if (!userEmail) {
             return new NextResponse(
-                JSON.stringify({ message: "Invalid user ID" }),
+                JSON.stringify({ message: "User email is required" }),
                 { status: 400 }
             );
         }
 
         await connectMongoDB();
 
-        const user = await User.findById(userId);
-
-        if (!user) {
-            return new NextResponse(
-                JSON.stringify({ message: "User not found" }),
-                { status: 404 }
-            );
-        }
-
-        const histories = await History.find({
-            user: new Types.ObjectId(userId)
-        });
+        const histories = await History.find({ userEmail: userEmail });
 
         return new NextResponse(
             JSON.stringify(histories),
@@ -45,35 +32,16 @@ export const GET = async (request) => {
 
 export const POST = async (request) => {
     try {
-        const { searchParams } = new URL(request.url);
-        const userId = searchParams.get("userId");
-
-        const { catId, text, fontSize, fontColor } = await request.json();
-
-        if (!userId || !Types.ObjectId.isValid(userId)) {
-            return new NextResponse(
-                JSON.stringify({ message: "Invalid user ID" }),
-                { status: 400 }
-            );
-        }
+        const { catId, text, fontSize, fontColor, userEmail } = await request.json();
 
         await connectMongoDB();
-
-        const user = await User.findById(userId);
-
-        if (!user) {
-            return new NextResponse(
-                JSON.stringify({ message: "User not found" }),
-                { status: 404 }
-            );
-        }
 
         const newHistory = new History({
             catId,
             text,
             fontSize,
             fontColor,
-            user: new Types.ObjectId(userId)
+            userEmail
         });
 
         await newHistory.save();
