@@ -65,6 +65,29 @@ export default function MemeCreator() {
     } catch (error) {
       console.error("Error fetching the cat meme:", error);
     }
+
+    // new history
+    try {
+      const response = await fetch("/api/histories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          catId: catId,
+          text: message,
+          fontSize: fontSize,
+          fontColor: fontColor,
+          userEmail: session.user.email
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      console.log("Added to histories!");
+    } catch (error) {
+      console.error("Failed to add history", error);
+    }
   };
 
   return (
