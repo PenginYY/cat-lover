@@ -4,6 +4,24 @@ import User from "../../../../../models/user";
 import Favorite from "../../../../../models/favorite";
 import bcrypt from "bcryptjs"
 
+export async function GET(req) {
+    try {
+        await connectMongoDB();
+        const { searchParams } = new URL(req.url);
+        const email = searchParams.get("email");
+
+        // Fetch the user's favorites based on their email
+        const user = await User.findOne({ email: email }).select("name email");
+
+        // Return the favorites array in the response
+        return NextResponse.json({ user }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json(
+            { message: "Internal Server Error" }, { status: 500 }
+        );
+    }
+}
+
 export async function PATCH(req) {
     try {
         await connectMongoDB();
