@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import { useSession } from "next-auth/react";
 import keyword from "../../../data/keywords.json";
 
-export default function MemeCreator() {
+export default function CatSearch() {
   const { data: session } = useSession();
 
   const [favorited, setFavorite] = useState(false);

@@ -7,7 +7,7 @@ import clsx from "clsx";
 import Navbar from "../components/Navbar";
 import { useSession } from "next-auth/react";
 
-export default function CatSearch() {
+export default function MemeCreator() {
   const { data: session } = useSession();
 
   const [message, setMessage] = useState("");
