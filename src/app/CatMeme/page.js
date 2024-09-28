@@ -16,6 +16,9 @@ export default function MemeCreator() {
   // default image
   const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
   const [error, setError] = useState("");
+  // catId
+  const catJason = 'https://cataas.com/cat?json=true';
+  const [catId, setCatId] = useState("");
 
   const messageHandle = (e) => {
     const newMessage = e.target.value;
@@ -33,12 +36,22 @@ export default function MemeCreator() {
     } else {
       setError("");
     }
+
+    try {
+      const response = await fetch(catJason)
+      const responseData = await response.json()
+      setCatId(responseData._id)
+    } catch (error) {
+      console.error("Error fetching cat id:", error);
+    }
+
     // Build the API URL using user inputs
     const encodedMessage = encodeURIComponent(message);
     console.log(encodedMessage);
     const encodedFontColor = fontColor.replace("#", "%23"); // URL encode the color
+    const encodedCatId = encodeURIComponent(catId);
 
-    const apiUrl = `https://cataas.com/cat/says/${encodedMessage}?font=Impact&fontSize=${fontSize}&fontColor=${encodedFontColor}&fontBackground=none&position=center`;
+    const apiUrl = `https://cataas.com/cat/${encodedCatId}/says/${encodedMessage}?font=Impact&fontSize=${fontSize}&fontColor=${encodedFontColor}&fontBackground=none&position=center`;
 
     try {
       const response = await fetch(apiUrl);
