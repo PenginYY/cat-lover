@@ -16,7 +16,7 @@ export default function Login() {
   const router = useRouter();
 
   const { data: session } = useSession();
-  if (session) router.replace("welcome");
+  if (session) redirect("/welcome");
 
   const handleSubmit = async (e) => {
     e.preventDefault();

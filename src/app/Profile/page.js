@@ -34,15 +34,12 @@ export default function Profile() {
     } else {
       const fetchProfileData = async () => {
         try {
-          const res = await fetch(
-            `api/users/profile?email=${session.user.email}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          const res = await fetch(`api/users/profile?email=${session.user.email}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
           const result = await res.json();
 
           if (res.ok) {
@@ -55,8 +52,8 @@ export default function Profile() {
           setError("An error occurred while loading the profile");
         }
       };
-      setEmail(session.user.email);
-      setCurrentEmail(session.user.email);
+      setEmail(session.user.email)
+      setCurrentEmail(session.user.email)
       fetchProfileData();
     }
   }, [session]);

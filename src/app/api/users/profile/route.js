@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectMongoDB } from "../../../../../lib/mongodb";
 import User from "../../../../../models/user";
 import Favorite from "../../../../../models/favorite";
+import History from "../../../../../models/history";
 import bcrypt from "bcryptjs"
 
 export async function GET(req) {
@@ -88,6 +89,7 @@ export async function DELETE(req) {
 
         await User.findOneAndDelete({ email });
         await Favorite.deleteMany({ userEmail: email })
+        await History.deleteMany({ userEmail: email })
 
         return NextResponse.json({ message: "User profile deleted successfully" }, { status: 200 });
     } catch (error) {
