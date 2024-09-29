@@ -1,15 +1,14 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
-import { signIn } from "next-auth/react"
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 export default function Login() {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,16 +23,18 @@ export default function Login() {
 
     try {
       const res = await signIn("credentials", {
-        email, password, redirect: false
-      })
+        email,
+        password,
+        redirect: false,
+      });
       if (res.error) {
         setError("Invalid credentials");
         return;
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
     <main>
@@ -43,7 +44,6 @@ export default function Login() {
           <h3 className="text-2xl font-bold mb-4">Login Page</h3>
           <hr className="my-3" />
           <form onSubmit={handleSubmit} className="space-y-4">
-
             {error && (
               <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
                 {error}
@@ -51,7 +51,9 @@ export default function Login() {
             )}
 
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="name">Email</label>
+              <label className="block text-gray-700 mb-2" htmlFor="name">
+                Email
+              </label>
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full block bg-gray-200 p-2 my-2 rounded-md"
@@ -61,7 +63,9 @@ export default function Login() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="email">password</label>
+              <label className="block text-gray-700 mb-2" htmlFor="email">
+                password
+              </label>
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full block bg-gray-200 p-2 my-2 rounded-md"

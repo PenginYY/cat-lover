@@ -74,7 +74,6 @@ export default function Register() {
           <h3 className="text-2xl font-bold mb-4">Register Page</h3>
           <hr className="my-3" />
           <form onSubmit={handleSubmit}>
-
             {error && (
               <div className="bg-red-500 w-fit text-sm text-white py-1 px-3 rounded-md mt-2">
                 {error}
@@ -87,7 +86,9 @@ export default function Register() {
             )}
 
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="name">Name</label>
+              <label className="block text-gray-700 mb-2" htmlFor="name">
+                Name
+              </label>
               <input
                 onChange={(e) => setName(e.target.value)}
                 className="w-full block bg-gray-200 p-2 my-2 rounded-md"
@@ -97,7 +98,9 @@ export default function Register() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="name">Email</label>
+              <label className="block text-gray-700 mb-2" htmlFor="name">
+                Email
+              </label>
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full block bg-gray-200 p-2 my-2 rounded-md"
@@ -107,7 +110,9 @@ export default function Register() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="name">Password</label>
+              <label className="block text-gray-700 mb-2" htmlFor="name">
+                Password
+              </label>
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full block bg-gray-200 p-2 my-2 rounded-md"
@@ -117,7 +122,9 @@ export default function Register() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="name">Confirm Password</label>
+              <label className="block text-gray-700 mb-2" htmlFor="name">
+                Confirm Password
+              </label>
               <input
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full block bg-gray-200 p-2 my-2 rounded-md"
