@@ -17,8 +17,7 @@ export default function MemeCreator() {
   const [catImageUrl, setCatImageUrl] = useState("/img/default-image.png");
   const [error, setError] = useState("");
   // catId
-  const catJason = 'https://cataas.com/cat?json=true';
-  const [catId, setCatId] = useState("");
+  const catJason = "https://cataas.com/cat?json=true";
 
   const messageHandle = (e) => {
     const newMessage = e.target.value;
@@ -38,56 +37,41 @@ export default function MemeCreator() {
     }
 
     try {
-      const response = await fetch(catJason)
-      const responseData = await response.json()
-      setCatId(responseData._id)
-    } catch (error) {
-      console.error("Error fetching cat id:", error);
-    }
+      const response = await fetch(catJason);
+      const responseData = await response.json();
 
-    // Build the API URL using user inputs
-    const encodedMessage = encodeURIComponent(message);
-    console.log(encodedMessage);
-    const encodedFontColor = fontColor.replace("#", "%23"); // URL encode the color
-    const encodedCatId = encodeURIComponent(catId);
+      // After catId is set, construct the meme URL
+      const encodedMessage = encodeURIComponent(message);
+      const encodedFontColor = fontColor.replace("#", "%23");
+      const apiUrl = `https://cataas.com/cat/${responseData._id}/says/${encodedMessage}?font=Impact&fontSize=${fontSize}&fontColor=${encodedFontColor}&fontBackground=none&position=center`;
 
-    const apiUrl = `https://cataas.com/cat/${encodedCatId}/says/${encodedMessage}?font=Impact&fontSize=${fontSize}&fontColor=${encodedFontColor}&fontBackground=none&position=center`;
-
-    try {
-      const response = await fetch(apiUrl);
-      if (response.ok) {
-        const imageUrl = response.url; // This is the direct image URL from the API
-        console.log(imageUrl); // Log the URL for confirmation
-
-        // Set the image URL in the state to display in the UI
+      // Fetch the generated meme image
+      const memeResponse = await fetch(apiUrl);
+      if (memeResponse.ok) {
+        const imageUrl = memeResponse.url;
         setCatImageUrl(imageUrl);
+
+        // Now, post the new history
+        const historyResponse = await fetch("/api/histories", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            catId: responseData._id,
+            text: message,
+            fontSize: parseInt(fontSize), // Ensure it's a number
+            fontColor: fontColor,
+            memeUrl: apiUrl,
+            userEmail: session?.user?.email,
+          }),
+        });
+
+        if (!historyResponse.ok) {
+          throw new Error(`Server error: ${historyResponse.status}`);
+        }
+        console.log("Added to histories!");
       }
     } catch (error) {
-      console.error("Error fetching the cat meme:", error);
-    }
-
-    // new history
-    try {
-      const response = await fetch("/api/histories", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          catId: catId,
-          text: message,
-          fontSize: fontSize,
-          fontColor: fontColor,
-          memeUrl: apiUrl,
-          userEmail: session.user.email
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-
-      console.log("Added to histories!");
-    } catch (error) {
-      console.error("Failed to add history", error);
+      console.error("Error fetching or posting the cat meme:", error);
     }
   };
 
