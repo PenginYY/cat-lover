@@ -18,3 +18,26 @@ This project showcases the technical skills acquired during the course and provi
 - Pattiya Yiadram -> Repository: https://github.com/PattiyaY/cat-lover
 - Yumi Yoshida -> Repository: https://github.com/PenginYY/cat-lover
 - Santawan Sanpha-asa -> Repository: https://github.com/piobookz/cat-lover
+
+
+## Screenshots
+### Home page
+<img src="./WebPagesImage/1-home.png" />
+
+###  Welcome page
+<img src="./WebPagesImage/2-welcome.png" />
+
+### Cat Search page
+<img src="./WebPagesImage/3-search.png" />
+
+### Meme Creator page
+<img src="./WebPagesImage/4-generate.png" />
+
+### Created Memes page
+<img src="./WebPagesImage/5-created.png" />
+
+### Favorite Memes page
+<img src="./WebPagesImage/6-favorite.png" />
+
+### Profile page
+<img src="./WebPagesImage/7-profile.png" />
