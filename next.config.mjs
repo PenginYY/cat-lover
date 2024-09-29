@@ -10,6 +10,9 @@ const nextConfig = {
       },
     ],
   },
+  images: {
+    domains: ["i.redd.it"], // Add i.redd.it here
+  },
 };
 
 export default nextConfig;
