@@ -4,14 +4,17 @@ import Navbar from "./components/Navbar";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link"; // Ensure Link is correctly imported
+import Image from "next/image";
 
 export default function Home() {
   const { data: session } = useSession(); // Fetch session data from NextAuth
-  const [catImageUrl, setCatImageUrl] = useState("/img/bb692186-c423-4dc8-aca9-51ca6b1d96c7.gif");
+  const [catImageUrl, setCatImageUrl] = useState(
+    "/img/bb692186-c423-4dc8-aca9-51ca6b1d96c7.gif"
+  );
 
   useEffect(() => {
     showCatHandle();
-  }, [])
+  }, []);
 
   const showCatHandle = async () => {
     const apiUrl = `https://cataas.com/cat/gif/says/Welcome?fontColor=green&fontSize=40&type=square`;
@@ -22,17 +25,17 @@ export default function Home() {
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob); // Convert blob to URL
       setCatImageUrl(imageUrl); // Update the image state
-    } catch {
+    } catch (error) {
       console.error("Error fetching the cat meme:", error);
     }
-  }
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-r from-sky-100 to-purple-100">
       <Navbar session={session} />
-      <div className='flex items-center justify-center min-h-[calc(100vh-80px)] mt-[-40px]'>
+      <div className="flex items-center justify-center min-h-[calc(100vh-80px)] mt-[-40px]">
         <div className="w-full max-w-3xl flex flex-col items-center justify-center p-4">
-          <h1 className='text-3xl md:text-5xl font-bold my-3 text-center'>
+          <h1 className="text-3xl md:text-5xl font-bold my-3 text-center">
             Welcome to Cat Lover
           </h1>
           <p className="text-lg md:text-xl mb-8 text-center">
@@ -57,11 +60,14 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <img
-            src="https://i.redd.it/lojakg5fd6761.gif"
-            alt="Cat Image"
-            className="w-[40%] h-auto object-cover"
-          />
+        <Image
+          src="https://i.redd.it/lojakg5fd6761.gif"
+          alt="Cat Image"
+          optimized={true}
+          width={300} // Provide a fixed width
+          height={300} // Provide a fixed height
+          className="w-[40%] h-auto object-cover"
+        />
       </div>
     </main>
   );

@@ -9,6 +9,7 @@ const nextConfig = {
         pathname: "/cat/**",
       },
     ],
+    domains: ["i.redd.it"],
   },
 };
 
