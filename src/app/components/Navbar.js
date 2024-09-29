@@ -10,7 +10,7 @@ export default function Navbar({ session }) {
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <div>
-            <Link href={"/Welcome"}>CAT LOVER</Link>
+            <Link href={"/welcome"}>CAT LOVER</Link>
           </div>
           {!session ? (
             <>
@@ -18,7 +18,7 @@ export default function Navbar({ session }) {
               <ul className="flex">
                 <li className="mx-3">
                   <Link
-                    href={"/Login"}
+                    href={"/login"}
                     className="flex items-center bg-white-500 border text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     Sign In
@@ -26,7 +26,7 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/Register"}
+                    href={"/register"}
                     className="flex items-center bg-blue-600 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-blue-800"
                   >
                     Sign Up
@@ -40,7 +40,7 @@ export default function Navbar({ session }) {
               <ul className="flex">
                 <li className="mx-3">
                   <Link
-                    href={"/CatSearch"}
+                    href={"/catsearch"}
                     className="flex items-center bg-white-500 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     <svg
@@ -62,15 +62,17 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/CatMeme"}
+                    href={"/catmeme"}
                     className="flex items-center bg-white-500 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="size-6">
+                      className="size-6"
+                    >
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -85,13 +87,16 @@ export default function Navbar({ session }) {
                     href={"/history"}
                     className="flex items-center bg-white-500 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="size-6">
-                      <path stroke-linecap="round"
+                      className="size-6"
+                    >
+                      <path
+                        stroke-linecap="round"
                         stroke-linejoin="round"
                         d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
                       />
@@ -101,7 +106,7 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/Favorite"}
+                    href={"/favorite"}
                     className="flex items-center bg-white-500 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     <svg
@@ -123,7 +128,7 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/Profile"}
+                    href={"/profile"}
                     className="flex items-center bg-white-500 border text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     <svg
