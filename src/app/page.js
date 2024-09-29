@@ -44,7 +44,7 @@ export default function Home() {
           <ul className="flex space-x-4">
             <li className="mx-3">
               <Link
-                href={"/Login"}
+                href={"/login"}
                 className="flex items-center bg-white border text-black py-2 px-3 rounded-md text-lg my-2 hover:bg-gray-100"
               >
                 Sign In
@@ -52,7 +52,7 @@ export default function Home() {
             </li>
             <li className="mx-3">
               <Link
-                href={"/Register"}
+                href={"/register"}
                 className="flex items-center bg-blue-600 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-blue-800"
               >
                 Sign Up
