@@ -15,7 +15,7 @@ export default function Register() {
   const [success, setSuccess] = useState("");
 
   const { data: session } = useSession();
-  if (session) redirect("/Welcome");
+  if (session) redirect("/welcome");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,7 +136,7 @@ export default function Register() {
           <hr className="my-3" />
           <p>
             Already have an account? Go to{" "}
-            <Link className="text-blue-500 hover:underline" href={"/Login"}>
+            <Link className="text-blue-500 hover:underline" href={"/login"}>
               Login
             </Link>{" "}
             Page

@@ -30,7 +30,7 @@ export default function Profile() {
 
     useEffect(() => {
         if (!session) {
-            redirect("/Welcome");
+            redirect("/welcome");
         } else {
             const fetchProfileData = async () => {
                 try {

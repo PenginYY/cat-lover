@@ -17,7 +17,7 @@ export default function Login() {
   const router = useRouter();
 
   const { data: session } = useSession();
-  if (session) router.replace("Welcome");
+  if (session) redirect("/welcome");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,7 +80,7 @@ export default function Login() {
           <hr className="my-3" />
           <p>
             Don&apos;t have an account? Go to{" "}
-            <Link className="text-blue-500 hover:underline" href={"/Register"}>
+            <Link className="text-blue-500 hover:underline" href={"/register"}>
               Register
             </Link>{" "}
             Page

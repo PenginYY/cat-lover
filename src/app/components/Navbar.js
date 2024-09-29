@@ -10,7 +10,7 @@ export default function Navbar({ session }) {
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <div>
-            <Link href={"/Welcome"}>CAT LOVER</Link>
+            <Link href={"/welcome"}>CAT LOVER</Link>
           </div>
           {!session ? (
             <>
@@ -18,7 +18,7 @@ export default function Navbar({ session }) {
               <ul className="flex">
                 <li className="mx-3">
                   <Link
-                    href={"/Login"}
+                    href={"/login"}
                     className="flex items-center bg-white-500 border text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     Sign In
@@ -26,7 +26,7 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/Register"}
+                    href={"/register"}
                     className="flex items-center bg-blue-600 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-blue-800"
                   >
                     Sign Up
@@ -40,7 +40,7 @@ export default function Navbar({ session }) {
               <ul className="flex">
                 <li className="mx-3">
                   <Link
-                    href={"/CatSearch"}
+                    href={"/catsearch"}
                     className="flex items-center bg-white-500 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     <svg
@@ -62,7 +62,7 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/CatMeme"}
+                    href={"/catmeme"}
                     className="flex items-center bg-white-500 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +101,7 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/Favorite"}
+                    href={"/favorite"}
                     className="flex items-center bg-white-500 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     <svg
@@ -123,7 +123,7 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/Profile"}
+                    href={"/profile"}
                     className="flex items-center bg-white-500 border text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     <svg
