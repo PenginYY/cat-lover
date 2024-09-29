@@ -12,6 +12,7 @@ export default function Profile() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [currentEmail, setCurrentEmail] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [action, setAction] = useState("");
@@ -40,11 +41,9 @@ export default function Profile() {
                         },
                     });
                     const result = await res.json();
-                    console.log("result: ",result)
 
                     if (res.ok) {
                         setName(result.user.name);
-                        console.log("result.name: ", result.name)
                         setEmail(result.user.email);
                     } else {
                         setError(result.message || "Failed to load profile");
@@ -53,6 +52,8 @@ export default function Profile() {
                     setError("An error occurred while loading the profile");
                 }
             };
+            setEmail(session.user.email)
+            setCurrentEmail(session.user.email)
             fetchProfileData();
         }
     }, [session]);
@@ -65,9 +66,30 @@ export default function Profile() {
 
         try {
             const body = {};
+            let emailChanged = false;
+
+            // Check if email has changed, if yes, validate the new email
+            if (email !== session.user.email) {
+                const resCheckUser = await fetch("api/users/checkUser", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email }),
+                });
+
+                const { user } = await resCheckUser.json();
+                if (user) {
+                    setError("Email is already in use by another account!");
+                    return;
+                }
+                emailChanged = true;
+            }
+
             if (name) body.name = name;
-            if (email) body.email = email;
+            if (emailChanged) body.email = email;
             if (password) body.password = password;
+            body.currentEmail = currentEmail;
             body.confirmPassword = confirmPassword;
 
             const res = await fetch("api/users/profile", {
@@ -85,7 +107,7 @@ export default function Profile() {
                 // Update the state with the new values
                 if (name) setName(name);
                 if (email) setEmail(email);
-                if (password) setPassword("");
+                if (password) setPassword(password);
                 setConfirmPassword("");
 
                 // Update the session
