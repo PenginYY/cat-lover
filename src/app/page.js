@@ -1,7 +1,6 @@
 "use client";
 
 import Navbar from "./components/Navbar";
-import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link"; // Ensure Link is correctly imported
@@ -29,54 +28,40 @@ export default function Home() {
   }
 
   return (
-    <main>
+    <main className="min-h-screen bg-gradient-to-r from-sky-100 to-purple-100">
       <Navbar session={session} />
-      <div className='container mx-auto'>
-        <h3 className='text-3xl my-3'>Welcome {session?.user?.name}</h3>
-        <hr className='my-3' />
-        <div className='flex'>
-          <div className='container p-5 mx-5 my-5'>
-            <h1><strong>Final Project for CSX4104: Web Application Development</strong></h1>
-            <hr className="my-3" />
-
-            <h2><strong>Overview</strong></h2>
-            <p>
-              This project is called <strong>Cat Lover</strong>. This is the final assignment for the CSX4104 Web Application Development course. Developed in collaboration between our team members: Pattiya Yiadram, Yumi Yoshida, and Santawan Sanpha-asa, this application is designed specifically for cat enthusiasts.
-            </p>
-
-            <hr className="my-3" />
-            <h2><strong>Features</strong></h2>
-            <ul>
-              <li><strong>Random Cat Pictures:</strong> Users can view a variety of random cat images.</li>
-              <li><strong>Image Search:</strong> Users can find images that match their personal preferences.</li>
-              <li><strong>Custom Cat Memes:</strong> Users can create memes by adding text to the cat images. The application provides options to choose the font color and size, allowing users to craft memes that reflect their creativity and sense of humor.</li>
-            </ul>
-
-            <hr className="my-3" />
-            <h2><strong>Purpose</strong></h2>
-            <p>
-              This project showcases the technical skills acquired during the course and provides a fun and interactive platform for cat lovers to express themselves.
-            </p>
-
-            <hr className="my-3" />
-            <h2><strong>Team Members</strong></h2>
-            <ul>
-              <li>- Pattiya Yiadram</li>
-              <li>- Yumi Yoshida</li>
-              <li>- Santawan Sanpha-asa</li>
-            </ul>
-          </div>
-          <div className="relative w-full h-64 md:h-96 lg:h-[800px]">
-            <Image
-              src={catImageUrl}
-              alt="Generated cat meme"
-              fill
-              priority={true}
-              className="object-contain"
-            />
-          </div>
-
+      <div className='flex items-center justify-center min-h-[calc(100vh-80px)] mt-[-40px]'>
+        <div className="w-full max-w-3xl flex flex-col items-center justify-center p-4">
+          <h1 className='text-3xl md:text-5xl font-bold my-3 text-center'>
+            Welcome to Cat Lover
+          </h1>
+          <p className="text-lg md:text-xl mb-8 text-center">
+            Final Project for CSX4104: Web Application Development
+          </p>
+          <ul className="flex space-x-4">
+            <li className="mx-3">
+              <Link
+                href={"/Login"}
+                className="flex items-center bg-white border text-black py-2 px-3 rounded-md text-lg my-2 hover:bg-gray-100"
+              >
+                Sign In
+              </Link>
+            </li>
+            <li className="mx-3">
+              <Link
+                href={"/Register"}
+                className="flex items-center bg-blue-600 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-blue-800"
+              >
+                Sign Up
+              </Link>
+            </li>
+          </ul>
         </div>
+        <img
+            src="https://i.redd.it/lojakg5fd6761.gif"
+            alt="Cat Image"
+            className="w-[40%] h-auto object-cover"
+          />
       </div>
     </main>
   );
