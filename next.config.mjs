@@ -9,9 +9,7 @@ const nextConfig = {
         pathname: "/cat/**",
       },
     ],
-  },
-  images: {
-    domains: ["i.redd.it"], // Add i.redd.it here
+    domains: ["i.redd.it"],
   },
 };
 
