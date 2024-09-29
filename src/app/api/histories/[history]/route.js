@@ -7,7 +7,7 @@ export const PATCH = async (request, context) => {
     const historyId = context.params.history;
     try {
         const body = await request.json();
-        const { catId, text, fontSize, fontColor, userEmail } = body;
+        const { catId, text, fontSize, fontColor, memeUrl, userEmail } = body;
 
         if (!userEmail) {
             return new NextResponse(
@@ -36,7 +36,7 @@ export const PATCH = async (request, context) => {
 
         const updatedHistory = await History.findByIdAndUpdate(
             historyId,
-            { catId, text, fontSize, fontColor, userEmail },
+            { catId, text, fontSize, fontColor, memeUrl, userEmail },
             { new: true }
         );
 

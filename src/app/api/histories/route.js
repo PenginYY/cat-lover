@@ -32,7 +32,7 @@ export const GET = async (request) => {
 
 export const POST = async (request) => {
     try {
-        const { catId, text, fontSize, fontColor, userEmail } = await request.json();
+        const { catId, text, fontSize, fontColor, memeUrl, userEmail } = await request.json();
 
         await connectMongoDB();
 
@@ -41,6 +41,7 @@ export const POST = async (request) => {
             text,
             fontSize,
             fontColor,
+            memeUrl,
             userEmail
         });
 

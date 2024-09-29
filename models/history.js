@@ -18,6 +18,10 @@ const HistorySchema = new Schema(
             type: String,
             required: true
         },
+        memeUrl: {
+            type: String,
+            required: true
+        },
         userEmail: {
             type: String,
             required: true,

@@ -76,6 +76,7 @@ export default function MemeCreator() {
           text: message,
           fontSize: fontSize,
           fontColor: fontColor,
+          memeUrl: apiUrl,
           userEmail: session.user.email
         }),
       });
@@ -140,8 +141,9 @@ export default function MemeCreator() {
         </button>
       </div>
 
-      {/* Font Color */}
+      {/* Font */}
       <div className="flex flex-row justify-center items-center space-x-10 mt-10">
+        {/* Font Color */}
         <div className="w-full max-w-md px-4 mb-10">
           <Field>
             <Label className="text-sm/6 font-medium text-black">
