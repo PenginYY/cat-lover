@@ -25,18 +25,43 @@ export async function GET(req) {
 export async function PATCH(req) {
     try {
         await connectMongoDB();
-        const { name, email, password, confirmPassword } = await req.json();
-        const user = await User.findOne({ email }).select("id name email password");
+        const { name, email, password, currentEmail, confirmPassword } = await req.json();
+        
+        const user = await User.findOne({ email: currentEmail }).select("name email password");
 
-        if (confirmPassword) {
-            const isPasswordValid = await bcrypt.compare(confirmPassword, user.password);
-            if (!isPasswordValid) {
-                return NextResponse.json({ message: "Invalid current password" }, { status: 401 });
-            }
+        
+        const isPasswordValid = await bcrypt.compare(confirmPassword, user.password);
+        if (!isPasswordValid) {
+            return NextResponse.json({ message: "Invalid current password" }, { status: 401 });
         }
 
-        if (name) user.name = name;
-        if (email) user.email = email;
+        // if (name) user.name = name;
+        // if (email) user.email = email;
+        // if (password) {
+        //     const hashedPassword = await bcrypt.hash(password, 10);
+        //     user.password = hashedPassword;
+        // }
+
+        // Check if a new password is provided but is empty
+        if (password === "") {
+            return NextResponse.json({ message: "Password cannot be empty" }, { status: 400 });
+        }
+
+        // Update name if provided
+        if (name && name !== user.name) {
+            user.name = name;
+        }
+
+        // Check if new email is different and not in use by another user
+        if (email && email !== user.email) {
+            const existingEmail = await User.findOne({ email });
+            if (existingEmail) {
+                return NextResponse.json({ message: "Email already in use" }, { status: 409 });
+            }
+            user.email = email;
+        }
+
+        // Update password if a new one is provided
         if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
             user.password = hashedPassword;

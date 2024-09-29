@@ -6,6 +6,12 @@ import bcrypt from "bcryptjs"
 export async function POST(req) {
     try {
         const { name, email, password } = await req.json();
+
+        // Check if a new password is provided but is empty
+        if (password === "") {
+            return NextResponse.json({ message: "Password cannot be empty" }, { status: 400 });
+        }
+        
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await connectMongoDB();
