@@ -82,7 +82,7 @@ export default function Navbar({ session }) {
                 </li>
                 <li className="mx-3">
                   <Link
-                    href={"/Favorite"} // change to created meme or history page
+                    href={"/history"}
                     className="flex items-center bg-white-500 text-white py-2 px-3 rounded-md text-lg my-2 hover:bg-white hover:text-black"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg"
